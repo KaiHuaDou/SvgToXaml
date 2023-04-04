@@ -1,17 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgConverter", "SvgConverter\SvgConverter.csproj", "{D1B291FE-A21B-4C27-930D-39CC2C963E13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SvgConverter", "SvgConverter\SvgConverter.csproj", "{D1B291FE-A21B-4C27-930D-39CC2C963E13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgConverterTest", "SvgConverterTest\SvgConverterTest.csproj", "{B4508A49-AE03-4427-980F-15FAF7B0CC8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgToXaml", "SvgToXaml\SvgToXaml.csproj", "{0CAF3717-683D-45D3-94A1-CFA4828EF67B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SvgToXaml", "SvgToXaml\SvgToXaml.csproj", "{0CAF3717-683D-45D3-94A1-CFA4828EF67B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconResources", "IconResources\IconResources.csproj", "{618E080B-86D8-4F12-B141-EFFE222D6E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IconResources", "IconResources\IconResources.csproj", "{618E080B-86D8-4F12-B141-EFFE222D6E9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDemoApp", "WpfDemoApp\WpfDemoApp.csproj", "{1582B923-7D2E-446E-9871-F7E1DB8D911F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfDemoApp", "WpfDemoApp\WpfDemoApp.csproj", "{1582B923-7D2E-446E-9871-F7E1DB8D911F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{BDFEB65A-4DEE-4350-A583-8F70FAB92CBA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +51,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {402ACCF3-6E8D-45D1-8A50-B0E510B30791}
 	EndGlobalSection
 EndGlobal
