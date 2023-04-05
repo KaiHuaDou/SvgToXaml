@@ -17,29 +17,29 @@ namespace SvgToXaml.ViewModels
 
         public string Filepath { get; }
         public string Filename => Path.GetFileName(Filepath);
-        public ImageSource PreviewSource => GetImageSource();
+        public ImageSource PreviewSource => GetImageSource( );
         public ICommand OpenDetailCommand { get; set; }
         public ICommand OpenFileCommand { get; set; }
-        protected abstract ImageSource GetImageSource();
+        protected abstract ImageSource GetImageSource( );
         public abstract bool HasXaml { get; }
         public abstract bool HasSvg { get; }
-        public string SvgDesignInfo => GetSvgDesignInfo();
+        public string SvgDesignInfo => GetSvgDesignInfo( );
 
-        private void OpenDetailExecute()
+        private void OpenDetailExecute( )
         {
             OpenDetailWindow(this);
         }
 
         public static void OpenDetailWindow(ImageBaseViewModel imageBaseViewModel)
         {
-            new DetailWindow { DataContext = imageBaseViewModel }.Show();
+            new DetailWindow { DataContext = imageBaseViewModel }.Show( );
         }
 
-        private void OpenFileExecute()
+        private void OpenFileExecute( )
         {
             Process.Start(Filepath);
         }
 
-        protected abstract string GetSvgDesignInfo();
+        protected abstract string GetSvgDesignInfo( );
     }
 }

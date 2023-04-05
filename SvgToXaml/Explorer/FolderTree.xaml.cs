@@ -15,14 +15,14 @@ namespace SvgToXaml.Explorer
     public partial class FolderTree
     {
         public static readonly DependencyProperty CurrentFolderProperty = DependencyProperty.Register(
-            "CurrentFolder", typeof (string), typeof (FolderTree), new PropertyMetadata(default(string), CurrentFolderChanged));
+            "CurrentFolder", typeof(string), typeof(FolderTree), new PropertyMetadata(default(string), CurrentFolderChanged));
 
         private static void CurrentFolderChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            FolderTree folderTree = (FolderTree)dependencyObject;
-            var item =  folderTree.FindItem(folderTree.FoldersTree, (string)dependencyPropertyChangedEventArgs.NewValue);
-            if (item!=null)
-                folderTree.SelectItem(item);
+            FolderTree folderTree = (FolderTree) dependencyObject;
+            TreeViewItem item = FindItem(folderTree.FoldersTree, (string) dependencyPropertyChangedEventArgs.NewValue);
+            if (item != null)
+                SelectItem(item);
         }
 
         public string CurrentFolder
@@ -30,17 +30,17 @@ namespace SvgToXaml.Explorer
             get { return (string) GetValue(CurrentFolderProperty); }
             set { SetValue(CurrentFolderProperty, value); }
         }
-        private readonly object _dummyNode = null;
+        private readonly object _dummyNode;
 
-        public FolderTree()
+        public FolderTree( )
         {
-            InitializeComponent();
-            FillRootLevel();
+            InitializeComponent( );
+            FillRootLevel( );
             FoldersTree.SelectedItemChanged += FoldersTreeOnSelectedItemChanged;
         }
 
         public static readonly DependencyProperty ContextMenuCommandsProperty = DependencyProperty.Register(
-            "ContextMenuCommands", typeof (ObservableCollection<Tuple<object, ICommand>>), typeof (FolderTree), new PropertyMetadata(default(ObservableCollection<Tuple<object, ICommand>>)));
+            "ContextMenuCommands", typeof(ObservableCollection<Tuple<object, ICommand>>), typeof(FolderTree), new PropertyMetadata(default(ObservableCollection<Tuple<object, ICommand>>)));
 
         public ObservableCollection<Tuple<object, ICommand>> ContextMenuCommands
         {
@@ -51,16 +51,18 @@ namespace SvgToXaml.Explorer
         private void FoldersTreeOnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> routedPropertyChangedEventArgs)
         {
             if (routedPropertyChangedEventArgs.NewValue is TreeViewItem)
-                CurrentFolder = (string)((routedPropertyChangedEventArgs.NewValue as TreeViewItem).Tag);
+                CurrentFolder = (string) (routedPropertyChangedEventArgs.NewValue as TreeViewItem).Tag;
         }
 
-        private void FillRootLevel()
+        private void FillRootLevel( )
         {
-            foreach (var drive in Directory.GetLogicalDrives())
+            foreach (string drive in Directory.GetLogicalDrives( ))
             {
-                var item = new TreeViewItem();
-                item.Header = drive;
-                item.Tag = drive;
+                TreeViewItem item = new TreeViewItem
+                {
+                    Header = drive,
+                    Tag = drive
+                };
                 item.Items.Add(_dummyNode);
                 item.Expanded += folder_Expanded;
 
@@ -74,22 +76,24 @@ namespace SvgToXaml.Explorer
 
         private void folder_Expanded(object sender, RoutedEventArgs e)
         {
-            var item = (TreeViewItem) sender;
+            TreeViewItem item = (TreeViewItem) sender;
             if (item.Items.Count == 1 && item.Items[0] == _dummyNode)
             {
-                item.Items.Clear();
+                item.Items.Clear( );
                 try
                 {
-                    if (item.Tag != null)
-                        foreach (var dir in Directory.GetDirectories((string) item.Tag))
+                    if (item.Tag == null) return;
+                    foreach (string dir in Directory.GetDirectories((string) item.Tag))
+                    {
+                        TreeViewItem subitem = new TreeViewItem
                         {
-                            var subitem = new TreeViewItem();
-                            subitem.Header = new DirectoryInfo(dir).Name;
-                            subitem.Tag = dir;
-                            subitem.Items.Add(_dummyNode);
-                            subitem.Expanded += folder_Expanded;
-                            item.Items.Add(subitem);
-                        }
+                            Header = new DirectoryInfo(dir).Name,
+                            Tag = dir
+                        };
+                        subitem.Items.Add(_dummyNode);
+                        subitem.Expanded += folder_Expanded;
+                        item.Items.Add(subitem);
+                    }
                 }
                 catch (Exception)
                 {
@@ -98,25 +102,25 @@ namespace SvgToXaml.Explorer
             }
         }
 
-        public void SelectItem(TreeViewItem item)
+        public static void SelectItem(TreeViewItem item)
         {
-            item.Focus();
+            item.Focus( );
             item.IsSelected = true;
-            item.BringIntoView();
+            item.BringIntoView( );
         }
 
-        public TreeViewItem FindItem(TreeView tv, string path)
+        public static TreeViewItem FindItem(TreeView tv, string path)
         {
             if (string.IsNullOrWhiteSpace(path))
                 return null;
-            var parts = GetDirParts(path);
-            var currItems = tv.Items;
+            IEnumerable<string> parts = GetDirParts(path);
+            ItemCollection currItems = tv.Items;
             TreeViewItem found = null;
-            foreach (var part in parts)
+            foreach (string part in parts)
             {
-                var newFound = currItems.Cast<TreeViewItem>()
+                TreeViewItem newFound = currItems.Cast<TreeViewItem>( )
                     .FirstOrDefault(
-                        e => string.Equals(e.Header.ToString(), part, StringComparison.InvariantCultureIgnoreCase));
+                        e => string.Equals(e.Header.ToString( ), part, StringComparison.OrdinalIgnoreCase));
                 if (newFound != null)
                 {
                     found = newFound;
@@ -127,11 +131,11 @@ namespace SvgToXaml.Explorer
             return found;
         }
 
-        private IEnumerable<string> GetDirParts(string path)
+        private static IEnumerable<string> GetDirParts(string path)
         {
             path = Path.GetFullPath(path);
             //yield return Path.GetPathRoot(path);
-            var parts = path.Split(Path.DirectorySeparatorChar).ToArray();
+            string[] parts = path.Split(Path.DirectorySeparatorChar).ToArray( );
             if (parts.Length > 0 && parts[0].Length == 2)
                 parts[0] += @"\";
             return parts;

@@ -8,10 +8,10 @@ using SvgToXaml.Infrastructure;
 
 namespace SvgToXaml
 {
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
 
@@ -22,30 +22,29 @@ namespace SvgToXaml
             }
             else
             {   //normale WPF-Applikationslogik
-                var app = new App();
-                app.InitializeComponent();
-                app.Run();
+                App app = new App( );
+                app.InitializeComponent( );
+                app.Run( );
             }
             return exitCode;
         }
 
         private static void RunConsole(string[] args)
         {
-            HConsoleHelper.InitConsoleHandles();
+            HConsoleHelper.InitConsoleHandles( );
 
             CmdLineHandler.HandleCommandLine(args);
 
-            HConsoleHelper.ReleaseConsoleHandles();
+            HConsoleHelper.ReleaseConsoleHandles( );
         }
 
         private static readonly Dictionary<string, Assembly> LoadedAsmsCache = new Dictionary<string, Assembly>(StringComparer.InvariantCultureIgnoreCase);
         private static Assembly OnResolveAssembly(object sender, ResolveEventArgs args)
         {
-            Assembly cachedAsm;
-            if (LoadedAsmsCache.TryGetValue(args.Name, out cachedAsm))
+            if (LoadedAsmsCache.TryGetValue(args.Name, out Assembly cachedAsm))
                 return cachedAsm;
 
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            Assembly executingAssembly = Assembly.GetExecutingAssembly( );
             AssemblyName assemblyName = new AssemblyName(args.Name);
 
             string path = assemblyName.Name + ".dll";
@@ -61,7 +60,7 @@ namespace SvgToXaml
 
                 byte[] assemblyRawBytes = new byte[stream.Length];
                 stream.Read(assemblyRawBytes, 0, assemblyRawBytes.Length);
-                var loadedAsm = Assembly.Load(assemblyRawBytes);
+                Assembly loadedAsm = Assembly.Load(assemblyRawBytes);
                 LoadedAsmsCache.Add(args.Name, loadedAsm);
                 return loadedAsm;
             }

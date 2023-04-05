@@ -16,7 +16,7 @@ namespace SvgToXaml.WrapPanel
         private Size _viewportSize;
         private Point _offset;
         private ItemsControl _itemsControl;
-        private readonly Dictionary<UIElement, Rect> _childLayouts = new Dictionary<UIElement, Rect>();
+        private readonly Dictionary<UIElement, Rect> _childLayouts = new Dictionary<UIElement, Rect>( );
 
         public static readonly DependencyProperty ItemWidthProperty =
             DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualizingWrapPanel), new PropertyMetadata(32.0, HandleItemDimensionChanged));
@@ -32,7 +32,7 @@ namespace SvgToXaml.WrapPanel
 
         private static int GetVirtualItemIndex(DependencyObject obj)
         {
-            return (int)obj.GetValue(VirtualItemIndexProperty);
+            return (int) obj.GetValue(VirtualItemIndexProperty);
         }
 
         private static void SetVirtualItemIndex(DependencyObject obj, int value)
@@ -42,37 +42,37 @@ namespace SvgToXaml.WrapPanel
 
         public double ItemHeight
         {
-            get { return (double)GetValue(ItemHeightProperty); }
+            get { return (double) GetValue(ItemHeightProperty); }
             set { SetValue(ItemHeightProperty, value); }
         }
 
         public double ItemWidth
         {
-            get { return (double)GetValue(ItemWidthProperty); }
+            get { return (double) GetValue(ItemWidthProperty); }
             set { SetValue(ItemWidthProperty, value); }
         }
 
-        public VirtualizingWrapPanel()
+        public VirtualizingWrapPanel( )
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                Dispatcher.BeginInvoke((Action)Initialize);
+                Dispatcher.BeginInvoke((Action) Initialize);
             }
         }
 
-        private void Initialize()
+        private void Initialize( )
         {
             _itemsControl = ItemsControl.GetItemsOwner(this);
-            _itemsGenerator = (IRecyclingItemContainerGenerator)ItemContainerGenerator;
+            _itemsGenerator = (IRecyclingItemContainerGenerator) ItemContainerGenerator;
 
-            InvalidateMeasure();
+            InvalidateMeasure( );
         }
 
         protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
         {
             base.OnItemsChanged(sender, args);
 
-            InvalidateMeasure();
+            InvalidateMeasure( );
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -83,31 +83,30 @@ namespace SvgToXaml.WrapPanel
             }
 
             _isInMeasure = true;
-            _childLayouts.Clear();
+            _childLayouts.Clear( );
 
-            var extentInfo = GetExtentInfo(availableSize);
+            ExtentInfo extentInfo = GetExtentInfo(availableSize);
 
             EnsureScrollOffsetIsWithinConstrains(extentInfo);
 
-            var layoutInfo = GetLayoutInfo(availableSize, ItemHeight, extentInfo);
+            ItemLayoutInfo layoutInfo = GetLayoutInfo(availableSize, ItemHeight, extentInfo);
 
             RecycleItems(layoutInfo);
 
             // Determine where the first item is in relation to previously realized items
-            var generatorStartPosition = _itemsGenerator.GeneratorPositionFromIndex(layoutInfo.FirstRealizedItemIndex);
+            GeneratorPosition generatorStartPosition = _itemsGenerator.GeneratorPositionFromIndex(layoutInfo.FirstRealizedItemIndex);
 
-            var visualIndex = 0;
+            int visualIndex = 0;
 
-            var currentX = layoutInfo.FirstRealizedItemLeft;
-            var currentY = layoutInfo.FirstRealizedLineTop;
+            double currentX = layoutInfo.FirstRealizedItemLeft;
+            double currentY = layoutInfo.FirstRealizedLineTop;
 
             using (_itemsGenerator.StartAt(generatorStartPosition, GeneratorDirection.Forward, true))
             {
-                for (var itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
+                for (int itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
                 {
-                    bool newlyRealized;
 
-                    var child = (UIElement)_itemsGenerator.GenerateNext(out newlyRealized);
+                    UIElement child = (UIElement) _itemsGenerator.GenerateNext(out bool newlyRealized);
                     SetVirtualItemIndex(child, itemIndex);
 
                     if (newlyRealized)
@@ -121,7 +120,7 @@ namespace SvgToXaml.WrapPanel
                         {
                             if (!ReferenceEquals(Children[visualIndex], child))
                             {
-                                var childCurrentIndex = Children.IndexOf(child);
+                                int childCurrentIndex = Children.IndexOf(child);
 
                                 if (childCurrentIndex >= 0)
                                 {
@@ -160,10 +159,10 @@ namespace SvgToXaml.WrapPanel
                 }
             }
 
-            RemoveRedundantChildren();
+            RemoveRedundantChildren( );
             UpdateScrollInfo(availableSize, extentInfo);
 
-            var desiredSize = new Size(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width,
+            Size desiredSize = new Size(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width,
                                        double.IsInfinity(availableSize.Height) ? 0 : availableSize.Height);
 
             _isInMeasure = false;
@@ -180,11 +179,11 @@ namespace SvgToXaml.WrapPanel
         {
             foreach (UIElement child in Children)
             {
-                var virtualItemIndex = GetVirtualItemIndex(child);
+                int virtualItemIndex = GetVirtualItemIndex(child);
 
                 if (virtualItemIndex < layoutInfo.FirstRealizedItemIndex || virtualItemIndex > layoutInfo.LastRealizedItemIndex)
                 {
-                    var generatorPosition = _itemsGenerator.GeneratorPositionFromIndex(virtualItemIndex);
+                    GeneratorPosition generatorPosition = _itemsGenerator.GeneratorPositionFromIndex(virtualItemIndex);
                     if (generatorPosition.Index >= 0)
                     {
                         _itemsGenerator.Recycle(generatorPosition, 1);
@@ -210,16 +209,16 @@ namespace SvgToXaml.WrapPanel
             _viewportSize = availableSize;
             _extentSize = new Size(availableSize.Width, extentInfo.ExtentHeight);
 
-            InvalidateScrollInfo();
+            InvalidateScrollInfo( );
         }
 
-        private void RemoveRedundantChildren()
+        private void RemoveRedundantChildren( )
         {
             // iterate backwards through the child collection because we're going to be
             // removing items from it
-            for (var i = Children.Count - 1; i >= 0; i--)
+            for (int i = Children.Count - 1; i >= 0; i--)
             {
-                var child = Children[i];
+                UIElement child = Children[i];
 
                 // if the virtual item index is -1, this indicates
                 // it is a recycled item that hasn't been reused this time round
@@ -234,7 +233,7 @@ namespace SvgToXaml.WrapPanel
         {
             if (_itemsControl == null)
             {
-                return new ItemLayoutInfo();
+                return new ItemLayoutInfo( );
             }
 
             // we need to ensure that there is one realized item prior to the first visible item, and one after the last visible item,
@@ -242,17 +241,17 @@ namespace SvgToXaml.WrapPanel
             // navigates up, the ListBox selects the previous item, and the scrolls that into view - and this triggers the loading of the rest of the items 
             // in that row
 
-            var firstVisibleLine = (int)Math.Floor(VerticalOffset / itemHeight);
+            int firstVisibleLine = (int) Math.Floor(VerticalOffset / itemHeight);
 
-            var firstRealizedIndex = Math.Max(extentInfo.ItemsPerLine * firstVisibleLine - 1, 0);
-            var firstRealizedItemLeft = firstRealizedIndex % extentInfo.ItemsPerLine * ItemWidth - HorizontalOffset;
+            int firstRealizedIndex = Math.Max(extentInfo.ItemsPerLine * firstVisibleLine - 1, 0);
+            double firstRealizedItemLeft = firstRealizedIndex % extentInfo.ItemsPerLine * ItemWidth - HorizontalOffset;
             // ReSharper disable once PossibleLossOfFraction
-            var firstRealizedItemTop = firstRealizedIndex / extentInfo.ItemsPerLine * itemHeight - VerticalOffset;
+            double firstRealizedItemTop = firstRealizedIndex / extentInfo.ItemsPerLine * itemHeight - VerticalOffset;
 
-            var firstCompleteLineTop = (firstVisibleLine == 0 ? firstRealizedItemTop : firstRealizedItemTop + ItemHeight);
-            var completeRealizedLines = (int)Math.Ceiling((availableSize.Height - firstCompleteLineTop) / itemHeight);
+            double firstCompleteLineTop = firstVisibleLine == 0 ? firstRealizedItemTop : firstRealizedItemTop + ItemHeight;
+            int completeRealizedLines = (int) Math.Ceiling((availableSize.Height - firstCompleteLineTop) / itemHeight);
 
-            var lastRealizedIndex = Math.Min(firstRealizedIndex + completeRealizedLines * extentInfo.ItemsPerLine + 2, _itemsControl.Items.Count - 1);
+            int lastRealizedIndex = Math.Min(firstRealizedIndex + completeRealizedLines * extentInfo.ItemsPerLine + 2, _itemsControl.Items.Count - 1);
 
             return new ItemLayoutInfo
             {
@@ -267,12 +266,12 @@ namespace SvgToXaml.WrapPanel
         {
             if (_itemsControl == null)
             {
-                return new ExtentInfo();
+                return new ExtentInfo( );
             }
 
-            var itemsPerLine = Math.Max((int)Math.Floor(viewPortSize.Width / ItemWidth), 1);
-            var totalLines = (int)Math.Ceiling((double)_itemsControl.Items.Count / itemsPerLine);
-            var extentHeight = Math.Max(totalLines * ItemHeight, viewPortSize.Height);
+            int itemsPerLine = Math.Max((int) Math.Floor(viewPortSize.Width / ItemWidth), 1);
+            int totalLines = (int) Math.Ceiling((double) _itemsControl.Items.Count / itemsPerLine);
+            double extentHeight = Math.Max(totalLines * ItemHeight, viewPortSize.Height);
 
             return new ExtentInfo
             {
@@ -283,62 +282,62 @@ namespace SvgToXaml.WrapPanel
             };
         }
 
-        public void LineUp()
+        public void LineUp( )
         {
             SetVerticalOffset(VerticalOffset - ScrollLineAmount);
         }
 
-        public void LineDown()
+        public void LineDown( )
         {
             SetVerticalOffset(VerticalOffset + ScrollLineAmount);
         }
 
-        public void LineLeft()
+        public void LineLeft( )
         {
             SetHorizontalOffset(HorizontalOffset + ScrollLineAmount);
         }
 
-        public void LineRight()
+        public void LineRight( )
         {
             SetHorizontalOffset(HorizontalOffset - ScrollLineAmount);
         }
 
-        public void PageUp()
+        public void PageUp( )
         {
             SetVerticalOffset(VerticalOffset - ViewportHeight);
         }
 
-        public void PageDown()
+        public void PageDown( )
         {
             SetVerticalOffset(VerticalOffset + ViewportHeight);
         }
 
-        public void PageLeft()
+        public void PageLeft( )
         {
             SetHorizontalOffset(HorizontalOffset + ItemWidth);
         }
 
-        public void PageRight()
+        public void PageRight( )
         {
             SetHorizontalOffset(HorizontalOffset - ItemWidth);
         }
 
-        public void MouseWheelUp()
+        public void MouseWheelUp( )
         {
             SetVerticalOffset(VerticalOffset - ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
-        public void MouseWheelDown()
+        public void MouseWheelDown( )
         {
             SetVerticalOffset(VerticalOffset + ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
-        public void MouseWheelLeft()
+        public void MouseWheelLeft( )
         {
             SetHorizontalOffset(HorizontalOffset - ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
-        public void MouseWheelRight()
+        public void MouseWheelRight( )
         {
             SetHorizontalOffset(HorizontalOffset + ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
@@ -353,8 +352,8 @@ namespace SvgToXaml.WrapPanel
             offset = Clamp(offset, 0, ExtentWidth - ViewportWidth);
             _offset = new Point(offset, _offset.Y);
 
-            InvalidateScrollInfo();
-            InvalidateMeasure();
+            InvalidateScrollInfo( );
+            InvalidateMeasure( );
         }
 
         public void SetVerticalOffset(double offset)
@@ -367,8 +366,8 @@ namespace SvgToXaml.WrapPanel
             offset = Clamp(offset, 0, ExtentHeight - ViewportHeight);
             _offset = new Point(_offset.X, offset);
 
-            InvalidateScrollInfo();
-            InvalidateMeasure();
+            InvalidateScrollInfo( );
+            InvalidateMeasure( );
         }
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
@@ -383,7 +382,7 @@ namespace SvgToXaml.WrapPanel
 
             rectangle = visual.TransformToAncestor(this).TransformBounds(rectangle);
 
-            var viewRect = new Rect(HorizontalOffset, VerticalOffset, ViewportWidth, ViewportHeight);
+            Rect viewRect = new Rect(HorizontalOffset, VerticalOffset, ViewportWidth, ViewportHeight);
             rectangle.X += viewRect.X;
             rectangle.Y += viewRect.Y;
 
@@ -402,21 +401,17 @@ namespace SvgToXaml.WrapPanel
 
         private static double CalculateNewScrollOffset(double topView, double bottomView, double topChild, double bottomChild)
         {
-            var offBottom = topChild < topView && bottomChild < bottomView;
-            var offTop = bottomChild > bottomView && topChild > topView;
-            var tooLarge = (bottomChild - topChild) > (bottomView - topView);
+            bool offBottom = topChild < topView && bottomChild < bottomView;
+            bool offTop = bottomChild > bottomView && topChild > topView;
+            bool tooLarge = (bottomChild - topChild) > (bottomView - topView);
 
-            if (!offBottom && !offTop)
-                return topView;
-
-            if ((offBottom && !tooLarge) || (offTop && tooLarge))
-                return topChild;
-
-            return bottomChild - (bottomView - topView);
+            return !offBottom && !offTop
+                ? topView
+                : (offBottom && !tooLarge) || (offTop && tooLarge) ? topChild : bottomChild - (bottomView - topView);
         }
 
 
-        public ItemLayoutInfo GetVisibleItemsRange()
+        public ItemLayoutInfo GetVisibleItemsRange( )
         {
             return GetLayoutInfo(_viewportSize, ItemHeight, GetExtentInfo(_viewportSize));
         }
@@ -451,19 +446,19 @@ namespace SvgToXaml.WrapPanel
             set;
         }
 
-        private void InvalidateScrollInfo()
+        private void InvalidateScrollInfo( )
         {
-            ScrollOwner?.InvalidateScrollInfo();
+            ScrollOwner?.InvalidateScrollInfo( );
         }
 
         private static void HandleItemDimensionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var wrapPanel = (d as VirtualizingWrapPanel);
+            VirtualizingWrapPanel wrapPanel = d as VirtualizingWrapPanel;
 
-            wrapPanel?.InvalidateMeasure();
+            wrapPanel?.InvalidateMeasure( );
         }
 
-        private double Clamp(double value, double min, double max)
+        private static double Clamp(double value, double min, double max)
         {
             return Math.Min(Math.Max(value, min), max);
         }

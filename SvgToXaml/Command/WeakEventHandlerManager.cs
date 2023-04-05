@@ -42,8 +42,7 @@ namespace SvgToXaml.Command
         {
             for (int index = handlers.Count - 1; index >= 0; --index)
             {
-                EventHandler eventHandler = handlers[index].Target as EventHandler;
-                if (eventHandler == null)
+                if (!(handlers[index].Target is EventHandler eventHandler))
                 {
                     handlers.RemoveAt(index);
                 }
@@ -64,7 +63,7 @@ namespace SvgToXaml.Command
         public static void AddWeakReferenceHandler(ref List<WeakReference> handlers, EventHandler handler, int defaultListSize)
         {
             if (handlers == null)
-                handlers = defaultListSize > 0 ? new List<WeakReference>(defaultListSize) : new List<WeakReference>();
+                handlers = defaultListSize > 0 ? new List<WeakReference>(defaultListSize) : new List<WeakReference>( );
             handlers.Add(new WeakReference(handler));
         }
 
@@ -79,8 +78,7 @@ namespace SvgToXaml.Command
                 return;
             for (int index = handlers.Count - 1; index >= 0; --index)
             {
-                EventHandler eventHandler = handlers[index].Target as EventHandler;
-                if (eventHandler == null || eventHandler == handler)
+                if (!(handlers[index].Target is EventHandler eventHandler) || eventHandler == handler)
                     handlers.RemoveAt(index);
             }
         }

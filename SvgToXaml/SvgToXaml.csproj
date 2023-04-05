@@ -2,47 +2,50 @@
     <PropertyGroup>
         <TargetFramework>net462</TargetFramework>
         <OutputType>WinExe</OutputType>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
         <UseWindowsForms>true</UseWindowsForms>
         <UseWPF>true</UseWPF>
         <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <UseVSHostingProcess>true</UseVSHostingProcess>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DebugType>none</DebugType>
-        <UseVSHostingProcess>true</UseVSHostingProcess>
     </PropertyGroup>
     <PropertyGroup>
         <StartupObject>SvgToXaml.Program</StartupObject>
-    </PropertyGroup>
-    <PropertyGroup>
         <ApplicationIcon>icon.ico</ApplicationIcon>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <AnalysisLevel>latest-recommended</AnalysisLevel>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
     </PropertyGroup>
     <ItemGroup>
         <AppDesigner Include="Properties\" />
+        <None Update="Properties\Settings.settings">
+          <Generator>SettingsSingleFileGenerator</Generator>
+          <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
         <None Update="TestBatch.cmd">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
         <Resource Include="Explorer\Images\diskdrive.png" />
         <Resource Include="Explorer\Images\folder.png" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
-    </ItemGroup>
-    <ItemGroup>
         <Resource Include="icon.ico" />
-    </ItemGroup>
-    <ItemGroup>
         <EmbeddedResource Include="Payload\T4Template.tt" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
         <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
         <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Properties\Settings.Designer.cs">
+        <DesignTimeSharedInput>True</DesignTimeSharedInput>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Settings.settings</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

@@ -4,15 +4,15 @@ using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace SvgToXaml.TextViewer
 {
-    public class XmlViewer: TextEditor
+    public class XmlViewer : TextEditor
     {
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof (string), typeof (XmlViewer), new PropertyMetadata(default(string), TextChanged));
+            "Text", typeof(string), typeof(XmlViewer), new PropertyMetadata(default(string), TextChanged));
 
-        private new static void TextChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        private static new void TextChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            var xmlViewer = (XmlViewer) dependencyObject;
-            xmlViewer.Document.Text = (string)args.NewValue;
+            XmlViewer xmlViewer = (XmlViewer) dependencyObject;
+            xmlViewer.Document.Text = (string) args.NewValue;
         }
 
         public new string Text
@@ -21,7 +21,7 @@ namespace SvgToXaml.TextViewer
             set { SetValue(TextProperty, value); }
         }
 
-        public XmlViewer()
+        public XmlViewer( )
         {
             SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
             //Options.AllowScrollBelowDocument = true;
@@ -32,7 +32,7 @@ namespace SvgToXaml.TextViewer
             //Options.ShowEndOfLine = true;              
 
             ShowLineNumbers = true;
-            
+
             //_foldingManager = FoldingManager.Install(TextArea);
             //_foldingStrategy = new XmlFoldingStrategy();
             //Document.TextChanged += DocumentTextChanged;

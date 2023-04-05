@@ -28,20 +28,20 @@ namespace SvgToXaml.Infrastructure
 
         #region Constructor
 
-        public ObservableCollectionSafe()
+        public ObservableCollectionSafe( )
         {
-            _coll = new Collection<T>();
+            _coll = new Collection<T>( );
             _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         }
 
         public ObservableCollectionSafe(IList<T> list)
-            : this()
+            : this( )
         {
             CopyFrom(list);
         }
 
         public ObservableCollectionSafe(IEnumerable<T> items)
-            : this()
+            : this( )
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -52,9 +52,9 @@ namespace SvgToXaml.Infrastructure
         {
             if (items != null)
             {
-                using (IEnumerator<T> enumerator = items.GetEnumerator())
+                using (IEnumerator<T> enumerator = items.GetEnumerator( ))
                 {
-                    while (enumerator.MoveNext())
+                    while (enumerator.MoveNext( ))
                     {
                         _coll.Add(enumerator.Current);
                     }
@@ -63,9 +63,9 @@ namespace SvgToXaml.Infrastructure
         }
 
         #endregion
-        public void Dispose()
+        public void Dispose( )
         {
-            _lock.Dispose();
+            _lock.Dispose( );
         }
 
         #region Events
@@ -78,7 +78,7 @@ namespace SvgToXaml.Infrastructure
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            var handler = CollectionChanged;
+            NotifyCollectionChangedEventHandler handler = CollectionChanged;
             if (handler != null)
             {
                 _isInCollectionChanged = true;
@@ -159,7 +159,7 @@ namespace SvgToXaml.Infrastructure
         {
             WriteAccess(true, (ref object dummy) =>
             {
-                foreach (var item in items)
+                foreach (T item in items)
                 {
                     _coll.Add(item);
                 }
@@ -230,7 +230,7 @@ namespace SvgToXaml.Infrastructure
         {
             WriteAccess(true, (ref object dummy) =>
             {
-                foreach (var item in items)
+                foreach (T item in items)
                 {
                     _coll.Remove(item);
                 }
@@ -238,11 +238,11 @@ namespace SvgToXaml.Infrastructure
             });
         }
 
-        public void Clear()
+        public void Clear( )
         {
             WriteAccess(true, (ref object dummy) =>
             {
-                _coll.Clear();
+                _coll.Clear( );
                 return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
             });
             //_lock.EnterWriteLock();
@@ -282,11 +282,11 @@ namespace SvgToXaml.Infrastructure
             //}
         }
 
-        delegate NotifyCollectionChangedEventArgs WriteAccessFunc<TResult>(ref TResult result);
+        private delegate NotifyCollectionChangedEventArgs WriteAccessFunc<TResult>(ref TResult result);
         private TResult WriteAccess<TResult>(bool countChanged, WriteAccessFunc<TResult> action)
         {
-            TResult result = default(TResult);
-            _lock.EnterWriteLock();
+            TResult result = default;
+            _lock.EnterWriteLock( );
             try
             {
                 NotifyCollectionChangedEventArgs args = action(ref result);
@@ -304,16 +304,16 @@ namespace SvgToXaml.Infrastructure
             }
             finally
             {
-                _lock.ExitWriteLock();
+                _lock.ExitWriteLock( );
             }
         }
 
-        public IDisposable BatchUpdate()
+        public IDisposable BatchUpdate( )
         {
             if (_inBatchUpdate)
                 throw new Exception("BatchUpdate already in progress");
             _inBatchUpdate = true;
-            return new CustomDisposable(() =>
+            return new CustomDisposable(( ) =>
             {
                 _inBatchUpdate = false;
                 OnPropertyChanged(CountString);
@@ -328,7 +328,7 @@ namespace SvgToXaml.Infrastructure
         {
             get
             {
-                return ReadAccess(() => _coll[index]);
+                return ReadAccess(( ) => _coll[index]);
                 //_lock.EnterReadLock();
                 //try
                 //{
@@ -366,7 +366,7 @@ namespace SvgToXaml.Infrastructure
         #region Read Access
         public void CopyTo(T[] array, int index)
         {
-            ReadAccess<object>(() =>
+            ReadAccess<object>(( ) =>
             {
                 _coll.CopyTo(array, index);
                 return null;
@@ -383,9 +383,9 @@ namespace SvgToXaml.Infrastructure
         }
         public void CopyTo(Array array, int index)
         {
-            ReadAccess<object>(() =>
+            ReadAccess<object>(( ) =>
             {
-                ((ICollection)_coll).CopyTo(array, index);
+                ((ICollection) _coll).CopyTo(array, index);
                 return null;
             });
             //_lock.EnterReadLock();
@@ -400,7 +400,7 @@ namespace SvgToXaml.Infrastructure
         }
         public bool Contains(T item)
         {
-            return ReadAccess(() => _coll.Contains(item));
+            return ReadAccess(( ) => _coll.Contains(item));
             //_lock.EnterReadLock();
             //try
             //{
@@ -413,7 +413,7 @@ namespace SvgToXaml.Infrastructure
         }
         public int IndexOf(T item)
         {
-            return ReadAccess(() => _coll.IndexOf(item));
+            return ReadAccess(( ) => _coll.IndexOf(item));
             //_lock.EnterReadLock();
             //try
             //{
@@ -429,7 +429,7 @@ namespace SvgToXaml.Infrastructure
         {
             get
             {
-                return ReadAccess(() => _coll.Count);
+                return ReadAccess(( ) => _coll.Count);
                 //_lock.EnterReadLock();
                 //try
                 //{
@@ -444,14 +444,14 @@ namespace SvgToXaml.Infrastructure
 
         private TResult ReadAccess<TResult>(Func<TResult> action)
         {
-            _lock.EnterReadLock();
+            _lock.EnterReadLock( );
             try
             {
-                return action();
+                return action( );
             }
             finally
             {
-                _lock.ExitReadLock();
+                _lock.ExitReadLock( );
             }
         }
 
@@ -465,22 +465,22 @@ namespace SvgToXaml.Infrastructure
             {
                 if (writeAccess && !_lock.IsWriteLockHeld)
                     throw new Exception("When calling CollectionChanged you should use Write Lock");
-                accessMethod();
+                accessMethod( );
             }
             else
             {   //wird beim Start aufgerufen, und z.B. beim Clear im Thread, dann kommt der Refresh später hier durch, 
                 //bei einfachen Add etc. kommt man hier gar nicht durch, dies macht die Shadow-Liste alles selbst
                 if (writeAccess)
-                    _lock.EnterWriteLock();
+                    _lock.EnterWriteLock( );
                 else
-                    _lock.EnterReadLock();
+                    _lock.EnterReadLock( );
 
-                accessMethod();
+                accessMethod( );
 
                 if (writeAccess)
-                    _lock.ExitWriteLock();
+                    _lock.ExitWriteLock( );
                 else
-                    _lock.ExitReadLock();
+                    _lock.ExitReadLock( );
             }
         }
 
@@ -575,7 +575,7 @@ namespace SvgToXaml.Infrastructure
         //}
         //#endregion
 
-        
+
         public class CustomDisposable : IDisposable
         {
             private readonly Action _action;
@@ -585,17 +585,17 @@ namespace SvgToXaml.Infrastructure
                 _action = action;
             }
 
-            public void Dispose()
+            public void Dispose( )
             {
-                _action();
+                _action( );
             }
         }
 
         #region Interface stuff
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        IEnumerator<T> IEnumerable<T>.GetEnumerator( )
         {
-            return ReadAccess(() => new List<T>(_coll).GetEnumerator()); //return a copy
+            return ReadAccess(( ) => new List<T>(_coll).GetEnumerator( )); //return a copy
             //_lock.EnterReadLock();
             //try
             //{
@@ -607,9 +607,9 @@ namespace SvgToXaml.Infrastructure
             //}
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator( )
         {
-            return ((IEnumerable<T>)this).GetEnumerator();
+            return ((IEnumerable<T>) this).GetEnumerator( );
         }
 
         int IList<T>.IndexOf(T item)
@@ -644,9 +644,9 @@ namespace SvgToXaml.Infrastructure
             Add(item);
         }
 
-        void ICollection<T>.Clear()
+        void ICollection<T>.Clear( )
         {
-            Clear();
+            Clear( );
         }
 
         bool ICollection<T>.Contains(T item)
@@ -661,40 +661,40 @@ namespace SvgToXaml.Infrastructure
 
         int ICollection<T>.Count => Count;
 
-        bool ICollection<T>.IsReadOnly => ((IList<T>)_coll).IsReadOnly;
+        bool ICollection<T>.IsReadOnly => ((IList<T>) _coll).IsReadOnly;
 
         bool ICollection<T>.Remove(T item)
         {
             return Remove(item);
         }
 
-        void IList.Clear()
+        void IList.Clear( )
         {
-            Clear();
+            Clear( );
         }
 
         bool IList.Contains(object value)
         {
-            return Contains((T)value);
+            return Contains((T) value);
         }
 
         int IList.IndexOf(object value)
         {
-            return IndexOf((T)value);
+            return IndexOf((T) value);
         }
 
         void IList.Insert(int index, object value)
         {
-            Insert(index, (T)value);
+            Insert(index, (T) value);
         }
 
-        bool IList.IsFixedSize => ((IList)_coll).IsFixedSize;
+        bool IList.IsFixedSize => ((IList) _coll).IsFixedSize;
 
-        bool IList.IsReadOnly => ((IList)_coll).IsReadOnly;
+        bool IList.IsReadOnly => ((IList) _coll).IsReadOnly;
 
         void IList.Remove(object value)
         {
-            Remove((T)value);
+            Remove((T) value);
         }
 
         void IList.RemoveAt(int index)
@@ -704,7 +704,7 @@ namespace SvgToXaml.Infrastructure
 
         int IList.Add(object value)
         {
-            return Add((T)value);
+            return Add((T) value);
         }
 
         object IList.this[int index]
@@ -715,7 +715,7 @@ namespace SvgToXaml.Infrastructure
             }
             set
             {
-                this[index] = (T)value;
+                this[index] = (T) value;
             }
         }
 
@@ -726,7 +726,7 @@ namespace SvgToXaml.Infrastructure
 
         int ICollection.Count => Count;
 
-        bool ICollection.IsSynchronized => ((IList)_coll).IsFixedSize;
+        bool ICollection.IsSynchronized => ((IList) _coll).IsFixedSize;
 
         object ICollection.SyncRoot
         {

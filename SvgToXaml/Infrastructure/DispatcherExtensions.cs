@@ -15,7 +15,7 @@ namespace SvgToXaml.Infrastructure
         {
             if (Application.Current == null)
             {
-                action();
+                action( );
                 return;
             }
 
@@ -24,60 +24,50 @@ namespace SvgToXaml.Infrastructure
 
         public static Task InUiAsync(Action action)
         {
-            if (Application.Current == null)
-            {
-                return RunSynchronously(action);
-            }
-
-            return Application.Current.Dispatcher.DoAsync(action);
+            return Application.Current == null ? RunSynchronously(action) : Application.Current.Dispatcher.DoAsync(action);
         }
 
         private static void Do(this Dispatcher dispatcher, Action action)
         {
-            if (!dispatcher.CheckAccess())
+            if (!dispatcher.CheckAccess( ))
             {
                 dispatcher.BeginInvoke(action, DispatcherPriority.Background);
                 return;
             }
 
-            action();
+            action( );
         }
 
         private static Task DoAsync(this Dispatcher dispatcher, Action action)
         {
-            if (!dispatcher.CheckAccess())
-            {
-                return RunAsync(dispatcher, action);
-            }
-
-            return RunSynchronously(action);
+            return !dispatcher.CheckAccess( ) ? RunAsync(dispatcher, action) : RunSynchronously(action);
         }
 
         private static Task RunAsync(Dispatcher dispatcher, Action action)
         {
-            var completionSource = new TaskCompletionSource<object>();
-            var dispatcherOperation = dispatcher.BeginInvoke(new Action(() =>
+            TaskCompletionSource<object> completionSource = new TaskCompletionSource<object>( );
+            DispatcherOperation dispatcherOperation = dispatcher.BeginInvoke(new Action(( ) =>
             {
                 try
                 {
-                    action();
+                    action( );
                 }
                 catch (Exception ex)
                 {
                     completionSource.SetException(ex);
                 }
             }), DispatcherPriority.Background);
-            dispatcherOperation.Aborted += (s, e) => completionSource.SetCanceled();
+            dispatcherOperation.Aborted += (s, e) => completionSource.SetCanceled( );
             dispatcherOperation.Completed += (s, e) => completionSource.SetResult(null);
             return completionSource.Task;
         }
 
         private static Task RunSynchronously(Action action)
         {
-            var completionSource = new TaskCompletionSource<object>();
+            TaskCompletionSource<object> completionSource = new TaskCompletionSource<object>( );
             try
             {
-                action();
+                action( );
                 completionSource.SetResult(null);
             }
             catch (Exception ex)

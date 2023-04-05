@@ -9,13 +9,13 @@ namespace SvgToXaml.ViewModels
 {
     public abstract class ViewModelBase : BindableBase
     {
-        protected static bool InDesignMode => DesignerProperties.GetIsInDesignMode(new DependencyObject());
+        protected static bool InDesignMode => DesignerProperties.GetIsInDesignMode(new DependencyObject( ));
 
         /// <summary>
         /// Führt die Action über den UI-Dispatcher aus.
         /// </summary>
         /// <param name="action">Auszuführende Aktion</param>
-        public void InUi(Action action)
+        public static void InUi(Action action)
         {
             Application.Current.Dispatcher.BeginInvoke(action, DispatcherPriority.Background);
         }
@@ -25,7 +25,7 @@ namespace SvgToXaml.ViewModels
         /// </summary>
         /// <param name="priority">Priority</param>
         /// <param name="action">Auszuführende Aktion</param>
-        public void InUi(DispatcherPriority priority, Action action)
+        public static void InUi(DispatcherPriority priority, Action action)
         {
             Application.Current.Dispatcher.BeginInvoke(action, priority);
         }

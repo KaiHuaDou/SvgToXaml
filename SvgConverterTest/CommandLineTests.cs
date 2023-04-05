@@ -44,6 +44,5 @@ namespace SvgConverterTest
             CmdLineHandler.HandleCommandLine("BuildDict /inputdir:\"..\\..\\TestFiles\\Subfolder1\\\" /handleSubFolders:true /outputname:images /outputdir:.").Should( ).Be(0);
             File.Exists(resultFile).Should( ).BeTrue( );
         }
-
     }
 }

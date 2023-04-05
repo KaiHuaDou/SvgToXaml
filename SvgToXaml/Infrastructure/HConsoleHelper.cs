@@ -47,13 +47,13 @@ namespace SvgToXaml.Infrastructure
     public static class HConsoleHelper
     {
         [DllImport("kernel32.dll")]
-        private static extern bool AllocConsole();
+        private static extern bool AllocConsole( );
 
         [DllImport("kernel32.dll")]
         private static extern bool AttachConsole(uint pid);
 
         [DllImport("kernel32.dll")]
-        private static extern bool FreeConsole();
+        private static extern bool FreeConsole( );
 
         [StructLayout(LayoutKind.Explicit)]
         // ReSharper disable once InconsistentNaming
@@ -75,7 +75,7 @@ namespace SvgToXaml.Infrastructure
             FocusEvent = 0x0010,
         }
 
-        [Flags()]
+        [Flags( )]
         public enum ControlKeyState
         {
             None = 0x0000,
@@ -118,26 +118,22 @@ namespace SvgToXaml.Infrastructure
         public static extern IntPtr GetStdHandle(StandardHandle nStdHandle);
 
         // ReSharper disable once InconsistentNaming
-        private const UInt32 ATTACH_PARENT_PROCESS = 0xFFFFFFFF;
+        private const uint ATTACH_PARENT_PROCESS = 0xFFFFFFFF;
 
         //true if attached - used to free it later
         public static bool ConsoleIsAttached { get; private set; }
 
-        public static void InitConsoleHandles()
+        public static void InitConsoleHandles( )
         {
             // Attach to console window – this may modify the standard handles
             if (AttachConsole(ATTACH_PARENT_PROCESS))
                 ConsoleIsAttached = true;
             else
-            {
-                AllocConsole();
-            }
+                AllocConsole( );
         }
 
-        public static void ReleaseConsoleHandles()
+        public static void ReleaseConsoleHandles( )
         {
-            //Console.WriteLine("Bye Bye");
-
             if (ConsoleIsAttached)
             {
                 //Leider wird im Falle von AttachConsole (an vorhandene Console) am Ende noch ein Enter erwartet
@@ -147,24 +143,24 @@ namespace SvgToXaml.Infrastructure
                 //Process.GetCurrentProcess().Kill(); //klappt nicht
                 //HToolBox.HSendKeys.Send("\r"); //"{ENTER}");
 
-                SendEnterToConsoleInput(); //sauberste Lösung
+                SendEnterToConsoleInput( ); //sauberste Lösung
             }
             else
             {
-                FreeConsole(); //Pendant zu AllocConsole
+                FreeConsole( ); //Pendant zu AllocConsole
             }
         }
 
         /// <summary>
         /// fügt einfach ein "Enter" in die Standardeingabe ein
         /// </summary>
-        public static void SendEnterToConsoleInput()
+        public static void SendEnterToConsoleInput( )
         {
             IntPtr stdIn = GetStdHandle(StandardHandle.Input);
 
             int eventsWritten = 0;
 
-            KeyEventStruct[] data = new KeyEventStruct[] { new KeyEventStruct() };
+            KeyEventStruct[] data = new KeyEventStruct[] { new KeyEventStruct( ) };
             data[0].EventType = InputEventType.KeyEvent;
             data[0].bKeyDown = true;
             data[0].uChar.AsciiChar = 13;

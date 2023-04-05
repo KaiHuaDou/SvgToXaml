@@ -13,7 +13,6 @@ namespace SvgConverterTest
             GZipStream stream = new GZipStream(fs, CompressionMode.Decompress);
             FileStream destination = File.OpenWrite(@".\TestFiles\example.svg");
             stream.CopyTo(destination);
-
         }
     }
 }

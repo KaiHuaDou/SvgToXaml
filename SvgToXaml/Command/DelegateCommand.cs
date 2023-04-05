@@ -17,7 +17,7 @@ namespace SvgToXaml.Command
         /// </summary>
         /// <param name="executeMethod">The <see cref="T:System.Action"/> to invoke when <see cref="M:System.Windows.Input.ICommand.Execute(System.Object)"/> is called.</param>
         public DelegateCommand(Action executeMethod)
-            : this(executeMethod, () => true)
+            : this(executeMethod, ( ) => true)
         {
         }
 
@@ -28,19 +28,19 @@ namespace SvgToXaml.Command
         /// </summary>
         /// <param name="executeMethod">The <see cref="T:System.Action"/> to invoke when <see cref="M:System.Windows.Input.ICommand.Execute(System.Object)"/> is called.</param><param name="canExecuteMethod">The <see cref="T:System.Func`1"/> to invoke when <see cref="M:System.Windows.Input.ICommand.CanExecute(System.Object)"/> is called</param>
         public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod)
-            : base(o => executeMethod(), o => canExecuteMethod())
+            : base(o => executeMethod( ), o => canExecuteMethod( ))
         {
             if (executeMethod == null || canExecuteMethod == null)
                 throw new ArgumentNullException(nameof(executeMethod), "DelegateCommand Delegates CannotBeNull");
         }
 
         private DelegateCommand(Func<Task> executeMethod)
-            : this(executeMethod, () => true)
+            : this(executeMethod, ( ) => true)
         {
         }
 
         private DelegateCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod)
-            : base(o => executeMethod(), o => canExecuteMethod())
+            : base(o => executeMethod( ), o => canExecuteMethod( ))
         {
             if (executeMethod == null || canExecuteMethod == null)
                 throw new ArgumentNullException(nameof(executeMethod), "DelegateCommand Delegates CannotBeNull");
@@ -76,7 +76,7 @@ namespace SvgToXaml.Command
         /// Executes the command.
         /// 
         /// </summary>
-        public virtual async Task Execute()
+        public virtual async Task Execute( )
         {
             await Execute(null);
         }
@@ -89,7 +89,7 @@ namespace SvgToXaml.Command
         /// <returns>
         /// Returns <see langword="true"/> if the command can execute, otherwise returns <see langword="false"/>.
         /// </returns>
-        public virtual bool CanExecute()
+        public virtual bool CanExecute( )
         {
             return CanExecute(null);
         }
@@ -148,12 +148,12 @@ namespace SvgToXaml.Command
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param><param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param><exception cref="T:System.ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> ar <see langword="null"/>.</exception>
         public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
-            : base(o => executeMethod((T)o), o => canExecuteMethod((T)o))
+            : base(o => executeMethod((T) o), o => canExecuteMethod((T) o))
         {
             if (executeMethod == null || canExecuteMethod == null)
                 throw new ArgumentNullException(nameof(executeMethod), "DelegateCommand Delegates CannotBeNull");
-            TypeInfo typeInfo = typeof(T).GetTypeInfo();
-            if (typeInfo.IsValueType && (!typeInfo.IsGenericType || !typeof(Nullable<>).GetTypeInfo().IsAssignableFrom(typeInfo.GetGenericTypeDefinition().GetTypeInfo())))
+            TypeInfo typeInfo = typeof(T).GetTypeInfo( );
+            if (typeInfo.IsValueType && (!typeInfo.IsGenericType || !typeof(Nullable<>).GetTypeInfo( ).IsAssignableFrom(typeInfo.GetGenericTypeDefinition( ).GetTypeInfo( ))))
                 throw new InvalidCastException("DelegateCommand Invalid Generic Payload Type");
         }
 
@@ -163,7 +163,7 @@ namespace SvgToXaml.Command
         }
 
         private DelegateCommand(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod)
-            : base(o => executeMethod((T)o), o => canExecuteMethod((T)o))
+            : base(o => executeMethod((T) o), o => canExecuteMethod((T) o))
         {
             if (executeMethod == null || canExecuteMethod == null)
                 throw new ArgumentNullException(nameof(executeMethod), "DelegateCommand Delegates CannotBeNull");
@@ -206,7 +206,7 @@ namespace SvgToXaml.Command
         /// </returns>
         public virtual bool CanExecute(T parameter)
         {
-            return CanExecute((object)parameter);
+            return CanExecute((object) parameter);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace SvgToXaml.Command
         /// <param name="parameter">Data used by the command.</param>
         public virtual async Task Execute(T parameter)
         {
-            await Execute((object)parameter);
+            await Execute((object) parameter);
         }
     }
 

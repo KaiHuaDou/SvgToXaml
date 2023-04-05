@@ -21,45 +21,47 @@ namespace SvgToXaml.ViewModels
         private ObservableCollectionSafe<ImageBaseViewModel> _images;
         private ImageBaseViewModel _selectedItem;
 
-        public SvgImagesViewModel()
+        public SvgImagesViewModel( )
         {
-            _images = new ObservableCollectionSafe<ImageBaseViewModel>();
+            _images = new ObservableCollectionSafe<ImageBaseViewModel>( );
             OpenFileCommand = new DelegateCommand(OpenFileExecute);
             OpenFolderCommand = new DelegateCommand(OpenFolderExecute);
             ExportDirCommand = new DelegateCommand(ExportDirExecute);
             InfoCommand = new DelegateCommand(InfoExecute);
 
-            ContextMenuCommands = new ObservableCollection<Tuple<object, ICommand>>();
-            ContextMenuCommands.Add(new Tuple<object, ICommand>("Open Explorer", new DelegateCommand<string>(OpenExplorerExecute))); 
+            ContextMenuCommands = new ObservableCollection<Tuple<object, ICommand>>
+            {
+                new Tuple<object, ICommand>("Open Explorer", new DelegateCommand<string>(OpenExplorerExecute))
+            };
         }
 
-        private void OpenFolderExecute()
+        private void OpenFolderExecute( )
         {
-            var folderDialog = new FolderBrowserDialog { Description = "Open Folder", SelectedPath = CurrentDir, ShowNewFolderButton = false };
-            if (folderDialog.ShowDialog() == DialogResult.OK)
+            FolderBrowserDialog folderDialog = new FolderBrowserDialog { Description = "Open Folder", SelectedPath = CurrentDir, ShowNewFolderButton = false };
+            if (folderDialog.ShowDialog( ) == DialogResult.OK)
                 CurrentDir = folderDialog.SelectedPath;
         }
 
-        private void OpenFileExecute()
+        private void OpenFileExecute( )
         {
-            var openDlg = new OpenFileDialog { CheckFileExists = true, Filter = "Svg-Files|*.svg*", Multiselect = false };
-            if (openDlg.ShowDialog().GetValueOrDefault())
+            OpenFileDialog openDlg = new OpenFileDialog { CheckFileExists = true, Filter = "Svg-Files|*.svg*", Multiselect = false };
+            if (openDlg.ShowDialog( ).GetValueOrDefault( ))
             {
                 ImageBaseViewModel.OpenDetailWindow(new SvgImageViewModel(openDlg.FileName));
             }
         }
 
-        private void ExportDirExecute()
+        private void ExportDirExecute( )
         {
-            string outFileName = Path.GetFileNameWithoutExtension(CurrentDir) + ".xaml"; 
-            var saveDlg = new SaveFileDialog {AddExtension = true, DefaultExt = ".xaml", Filter = "Xaml-File|*.xaml", InitialDirectory = CurrentDir, FileName = outFileName};
-            if (saveDlg.ShowDialog() == DialogResult.OK)
+            string outFileName = Path.GetFileNameWithoutExtension(CurrentDir) + ".xaml";
+            SaveFileDialog saveDlg = new SaveFileDialog { AddExtension = true, DefaultExt = ".xaml", Filter = "Xaml-File|*.xaml", InitialDirectory = CurrentDir, FileName = outFileName };
+            if (saveDlg.ShowDialog( ) == DialogResult.OK)
             {
                 string namePrefix = null;
 
                 bool useComponentResKeys = false;
                 string nameSpaceName = null;
-                var nameSpace = Microsoft.VisualBasic.Interaction.InputBox("Enter a NameSpace for using static ComponentResKeys (or leave empty to not use it)", "NameSpace");
+                string nameSpace = Microsoft.VisualBasic.Interaction.InputBox("Enter a NameSpace for using static ComponentResKeys (or leave empty to not use it)", "NameSpace");
                 if (!string.IsNullOrWhiteSpace(nameSpace))
                 {
                     useComponentResKeys = true;
@@ -76,7 +78,7 @@ namespace SvgToXaml.ViewModels
                 }
 
                 outFileName = Path.GetFullPath(saveDlg.FileName);
-                var resKeyInfo = new ResKeyInfo
+                ResKeyInfo resKeyInfo = new ResKeyInfo
                 {
                     XamlName = Path.GetFileNameWithoutExtension(outFileName),
                     Prefix = namePrefix,
@@ -96,12 +98,12 @@ namespace SvgToXaml.ViewModels
             if (MessageBox.Show(outFileName + "\nhas been written\nCreate a BatchFile to automate next time?",
                 null, MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
             {
-                var outputname = Path.GetFileNameWithoutExtension(outFileName);
-                var outputdir = Path.GetDirectoryName(outFileName);
-                var relOutputDir = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, outputdir, PathIs.Folder);
-                var svgToXamlPath =System.Reflection.Assembly.GetEntryAssembly().Location;
-                var relSvgToXamlPath = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, svgToXamlPath, PathIs.File);
-                var batchText = $"{relSvgToXamlPath} BuildDict /inputdir \".\" /outputdir \"{relOutputDir}\" /outputname {outputname}";
+                string outputname = Path.GetFileNameWithoutExtension(outFileName);
+                string outputdir = Path.GetDirectoryName(outFileName);
+                string relOutputDir = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, outputdir, PathIs.Folder);
+                string svgToXamlPath = System.Reflection.Assembly.GetEntryAssembly( ).Location;
+                string relSvgToXamlPath = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, svgToXamlPath, PathIs.File);
+                string batchText = $"{relSvgToXamlPath} BuildDict /inputdir \".\" /outputdir \"{relOutputDir}\" /outputname {outputname}";
 
                 if (compResKeyInfo.UseComponentResKeys)
                 {
@@ -119,36 +121,23 @@ namespace SvgToXaml.ViewModels
                 batchText += "\r\npause";
 
                 File.WriteAllText(Path.Combine(CurrentDir, "Update.cmd"), batchText);
-
-                ////Copy ExeFile
-                //var srcFile = Environment.GetCommandLineArgs().First();
-                //var destFile = Path.Combine(CurrentDir, Path.GetFileName(srcFile));
-                ////Console.WriteLine("srcFile:", srcFile);
-                ////Console.WriteLine("destFile:", destFile);
-                //if (!string.Equals(srcFile, destFile, StringComparison.OrdinalIgnoreCase))
-                //{
-                //    Console.WriteLine("Copying file...");
-                //    File.Copy(srcFile, destFile, true);
-                //}
             }
         }
 
-        private void WriteT4Template(string outFileName)
+        private static void WriteT4Template(string outFileName)
         {
             //BuildAction: "Embedded Resource"
-            var appType = typeof(App);
-            var assembly = appType.Assembly;
+            Type appType = typeof(App);
+            System.Reflection.Assembly assembly = appType.Assembly;
             //assembly.GetName().Name
-            var resourceName = appType.Namespace + "." + "Payload.T4Template.tt"; //Achtung: hier Punkt statt Slash
-            var stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream == null)
-                throw new InvalidDataException($"Error: {resourceName} not found in payload file");
-            var text = new StreamReader(stream, Encoding.UTF8).ReadToEnd();
-            var t4FileName = Path.ChangeExtension(outFileName, ".tt");
+            string resourceName = appType.Namespace + "." + "Payload.T4Template.tt"; //Achtung: hier Punkt statt Slash
+            Stream stream = assembly.GetManifestResourceStream(resourceName) ?? throw new InvalidDataException($"Error: {resourceName} not found in payload file");
+            string text = new StreamReader(stream, Encoding.UTF8).ReadToEnd( );
+            string t4FileName = Path.ChangeExtension(outFileName, ".tt");
             File.WriteAllText(t4FileName, text, Encoding.UTF8);
         }
 
-        private void InfoExecute()
+        private void InfoExecute( )
         {
             MessageBox.Show("SvgToXaml © 2015 Bernd Klaiber\n\nPowered by\nsharpvectors.codeplex.com (Svg-Support),\nicsharpcode (AvalonEdit)", "Info");
         }
@@ -161,7 +150,7 @@ namespace SvgToXaml.ViewModels
         {
             get
             {
-                var result = new SvgImagesViewModel();
+                SvgImagesViewModel result = new SvgImagesViewModel( );
                 result.Images.Add(SvgImageViewModel.DesignInstance);
                 result.Images.Add(SvgImageViewModel.DesignInstance);
                 return result;
@@ -170,7 +159,7 @@ namespace SvgToXaml.ViewModels
 
         public string CurrentDir
         {
-            get { return _currentDir; }
+            get => _currentDir;
             set
             {
                 if (SetProperty(ref _currentDir, value))
@@ -180,14 +169,14 @@ namespace SvgToXaml.ViewModels
 
         public ImageBaseViewModel SelectedItem
         {
-            get { return _selectedItem; }
-            set { SetProperty(ref _selectedItem, value); }
+            get => _selectedItem;
+            set => SetProperty(ref _selectedItem, value);
         }
 
         public ObservableCollectionSafe<ImageBaseViewModel> Images
         {
-            get { return _images; }
-            set { SetProperty(ref _images, value); }
+            get => _images;
+            set => SetProperty(ref _images, value);
         }
 
         public ICommand OpenFolderCommand { get; set; }
@@ -199,15 +188,15 @@ namespace SvgToXaml.ViewModels
 
         private void ReadImagesFromDir(string folder)
         {
-            Images.Clear();
-            var svgFiles = ConverterLogic.SvgFilesFromFolder(folder);
-            var svgImages = svgFiles.Select(f => new SvgImageViewModel(f));
+            Images.Clear( );
+            System.Collections.Generic.IEnumerable<string> svgFiles = ConverterLogic.SvgFilesFromFolder(folder);
+            System.Collections.Generic.IEnumerable<SvgImageViewModel> svgImages = svgFiles.Select(f => new SvgImageViewModel(f));
 
-            var graphicFiles = GetFilesMulti(folder, GraphicImageViewModel.SupportedFormats);
-            var graphicImages = graphicFiles.Select(f => new GraphicImageViewModel(f));
-            
-            var allImages = svgImages.Concat<ImageBaseViewModel>(graphicImages).OrderBy(e=>e.Filepath);
-            
+            string[] graphicFiles = GetFilesMulti(folder, GraphicImageViewModel.SupportedFormats);
+            System.Collections.Generic.IEnumerable<GraphicImageViewModel> graphicImages = graphicFiles.Select(f => new GraphicImageViewModel(f));
+
+            IOrderedEnumerable<ImageBaseViewModel> allImages = svgImages.Concat<ImageBaseViewModel>(graphicImages).OrderBy(e => e.Filepath);
+
             Images.AddRange(allImages);
         }
 
@@ -215,13 +204,13 @@ namespace SvgToXaml.ViewModels
         {
             try
             {
-                if (!Directory.Exists(sourceFolder))
-                    return new string[0];
-                return filters.Split('|').SelectMany(filter => Directory.GetFiles(sourceFolder, filter, searchOption)).ToArray();
+                return !Directory.Exists(sourceFolder)
+                    ? Array.Empty<string>( )
+                    : filters.Split('|').SelectMany(filter => Directory.GetFiles(sourceFolder, filter, searchOption)).ToArray( );
             }
             catch (Exception)
             {
-                return new string[0];
+                return Array.Empty<string>( );
             }
         }
     }

@@ -31,7 +31,7 @@ namespace SvgToXaml.Command
                 if (_isActive == value)
                     return;
                 _isActive = value;
-                OnIsActiveChanged();
+                OnIsActiveChanged( );
             }
         }
 
@@ -109,7 +109,7 @@ namespace SvgToXaml.Command
         ///             command invoker can requery <see cref="M:System.Windows.Input.ICommand.CanExecute(System.Object)"/>.
         /// 
         /// </summary>
-        protected virtual void OnCanExecuteChanged()
+        protected virtual void OnCanExecuteChanged( )
         {
             WeakEventHandlerManager.CallWeakReferenceHandlers(this, _canExecuteChangedHandlers);
         }
@@ -123,9 +123,9 @@ namespace SvgToXaml.Command
         /// </remarks>
         /// 
         /// </summary>
-        public void RaiseCanExecuteChanged()
+        public void RaiseCanExecuteChanged( )
         {
-            OnCanExecuteChanged();
+            OnCanExecuteChanged( );
         }
 
         async void ICommand.Execute(object parameter)
@@ -158,16 +158,14 @@ namespace SvgToXaml.Command
         /// </returns>
         protected bool CanExecute(object parameter)
         {
-            if (CanExecuteMethod != null)
-                return CanExecuteMethod(parameter);
-            return true;
+            return CanExecuteMethod == null || CanExecuteMethod(parameter);
         }
 
         /// <summary>
         /// This raises the <see cref="E:Microsoft.Practices.Prism.Commands.DelegateCommandBase.IsActiveChanged"/> event.
         /// 
         /// </summary>
-        protected virtual void OnIsActiveChanged()
+        protected virtual void OnIsActiveChanged( )
         {
             EventHandler eventHandler = IsActiveChanged;
             eventHandler?.Invoke(this, EventArgs.Empty);

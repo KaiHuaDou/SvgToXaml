@@ -6,27 +6,27 @@ using SvgToXaml.ViewModels;
 
 namespace SvgToXaml
 {
-	//todo: github oder codeplex anlegen
-	//todo: Fehlerbehandlung beim Laden
+    //todo: github oder codeplex anlegen
+    //todo: Fehlerbehandlung beim Laden
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
-        public MainWindow()
+        public MainWindow( )
         {
-            InitializeComponent();
-            DataContext = new SvgImagesViewModel();
+            InitializeComponent( );
+            DataContext = new SvgImagesViewModel( );
             ((SvgImagesViewModel) DataContext).CurrentDir = Settings.Default.LastDir;
         }
 
-       
+
         protected override void OnClosing(CancelEventArgs e)
         {
             //Save current Dir for next Start
             Settings.Default.LastDir = ((SvgImagesViewModel) DataContext).CurrentDir;
-            Settings.Default.Save();
+            Settings.Default.Save( );
 
             base.OnClosing(e);
         }
@@ -35,9 +35,9 @@ namespace SvgToXaml
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                string[] paths = (string[]) e.Data.GetData(DataFormats.FileDrop);
 
-                foreach (var path in paths)
+                foreach (string path in paths)
                 {
                     if (Directory.Exists(path))
                     {
@@ -55,5 +55,5 @@ namespace SvgToXaml
         }
     }
 
-   
+
 }

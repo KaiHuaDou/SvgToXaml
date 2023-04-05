@@ -1,56 +1,74 @@
-﻿<Window x:Class="SvgToXaml.DetailWindow"
+﻿<Window Width="300" Height="375"
+        x:Class="SvgToXaml.DetailWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModels="clr-namespace:SvgToXaml.ViewModels"
         xmlns:textViewer="clr-namespace:SvgToXaml.TextViewer"
-        mc:Ignorable="d" 
-        Title="{Binding Filename}" Height="375" Width="300"
-        d:DataContext="{x:Static viewModels:SvgImageViewModel.DesignInstance}">
+        Title="{Binding Filename}">
     <Grid>
         <TabControl TabStripPlacement="Bottom">
             <TabItem Header="View Image">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" BorderThickness="1" BorderBrush="#FF00008A" Margin="2">
-                        <Image x:Name="Image" Source="{Binding PreviewSource}" Stretch="Uniform">
+                    <Border Grid.Row="0" Margin="2"
+                            BorderThickness="1"
+                            BorderBrush="#FF00008A">
+                        <Image x:Name="Image"
+                               Source="{Binding PreviewSource}"
+                               Stretch="Uniform">
                             <Image.InputBindings>
                                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenDetailCommand}" />
                             </Image.InputBindings>
                         </Image>
                     </Border>
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <Grid HorizontalAlignment="Center" Width="80">
+                        <Grid Width="80" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Designed" TextAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding SvgDesignInfo}"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="Designed"
+                                       TextAlignment="Center" />
+                            <TextBlock Grid.Row="1"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding SvgDesignInfo}" />
                         </Grid>
-                        <Grid HorizontalAlignment="Center" Width="80">
+                        <Grid Width="80" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Actual Size" TextAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center">
-                                <Run Text="{Binding ElementName=Image,Path=ActualWidth,Mode=OneWay,StringFormat={}{0:0.0}}"/>
-                                <Run Text="x"/>
-                                <Run Text="{Binding ElementName=Image,Path=ActualHeight,Mode=OneWay,StringFormat={}{0:0.0}}"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="Actual Size"
+                                       TextAlignment="Center" />
+                            <TextBlock Grid.Row="1"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center">
+                                <Run Text="{Binding ElementName=Image, Path=ActualWidth, Mode=OneWay, StringFormat={}{0:0.0}}" />
+                                <Run Text="x" />
+                                <Run Text="{Binding ElementName=Image, Path=ActualHeight, Mode=OneWay, StringFormat={}{0:0.0}}" />
                             </TextBlock>
                         </Grid>
-                        <Grid HorizontalAlignment="Center" Width="80">
+                        <Grid Width="80" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Stretch" Foreground="Blue" TextDecorations="Underline" TextAlignment="Center" VerticalAlignment="Center" MouseLeftButtonDown="ToggleStretchClicked"/>
-                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding ElementName=Image, Path=Stretch}"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="Stretch"
+                                       Foreground="Blue"
+                                       TextDecorations="Underline"
+                                       TextAlignment="Center"
+                                       MouseLeftButtonDown="ToggleStretchClicked" />
+                            <TextBlock Grid.Row="1"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Text="{Binding ElementName=Image, Path=Stretch}" />
                         </Grid>
                     </StackPanel>
                 </Grid>
@@ -58,20 +76,25 @@
             <TabItem Header="Xaml" Visibility="{Binding HasXaml, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
-                    <textViewer:XmlViewer Grid.Row="0" x:Name="XmlViewer" FontFamily="Consolas" FontSize="10pt" Text="{Binding Xaml}">
-
-                    </textViewer:XmlViewer>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                    <textViewer:XmlViewer x:Name="XmlViewer" Grid.Row="0"
+                                          FontFamily="Consolas"
+                                          FontSize="10pt"
+                                          Text="{Binding Xaml}" />
+                    <StackPanel Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
                         <Button Click="CopyToClipboardClick">Copy to Clipboard</Button>
                     </StackPanel>
 
                 </Grid>
             </TabItem>
             <TabItem Header="Svg" Visibility="{Binding HasSvg, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <textViewer:XmlViewer FontFamily="Consolas" FontSize="10pt" Text="{Binding Svg}"/>
+                <textViewer:XmlViewer FontFamily="Consolas"
+                                      FontSize="10pt"
+                                      Text="{Binding Svg}" />
             </TabItem>
         </TabControl>
     </Grid>

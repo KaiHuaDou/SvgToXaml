@@ -79,15 +79,14 @@ namespace SvgToXaml.ViewModels
         {
             if (propertyExpression == null)
                 throw new ArgumentNullException(nameof(propertyExpression));
-            MemberExpression memberExpression = propertyExpression.Body as MemberExpression;
-            if (memberExpression == null)
+            if (!(propertyExpression.Body is MemberExpression memberExpression))
                 throw new ArgumentException("PropertySupport NotMemberAccessExpression", nameof(propertyExpression));
             PropertyInfo propertyInfo = memberExpression.Member as PropertyInfo;
-            if (propertyInfo == null)
-                throw new ArgumentException("PropertySupport ExpressionNotProperty", nameof(propertyExpression));
-            if (propertyInfo.GetMethod.IsStatic)
-                throw new ArgumentException("PropertySupport StaticExpression", nameof(propertyExpression));
-            return memberExpression.Member.Name;
+            return propertyInfo == null
+                ? throw new ArgumentException("PropertySupport ExpressionNotProperty", nameof(propertyExpression))
+                : propertyInfo.GetMethod.IsStatic
+                ? throw new ArgumentException("PropertySupport StaticExpression", nameof(propertyExpression))
+                : memberExpression.Member.Name;
         }
 
     }
