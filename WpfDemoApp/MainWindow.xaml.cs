@@ -9,9 +9,9 @@ namespace WpfDemoApp
     /// </summary>
     public partial class MainWindow
     {
-        public MainWindow()
+        public MainWindow( )
         {
-            InitializeComponent();
+            InitializeComponent( );
         }
 
         private void ChangeColor_OnClick(object sender, RoutedEventArgs e)
@@ -28,8 +28,7 @@ namespace WpfDemoApp
         private void BtnChangeMiddleColors_OnClick(object sender, RoutedEventArgs e)
         {
             //Many icons have same Color (application wide)
-            var brushes = FindResource("BrushCollectionRes") as BrushCollection;
-            if (brushes != null)
+            if (FindResource("BrushCollectionRes") is BrushCollection brushes)
                 brushes[2] = Brushes.Green;
         }
     }

@@ -27,8 +27,8 @@ namespace SvgToXaml.Explorer
 
         public string CurrentFolder
         {
-            get { return (string) GetValue(CurrentFolderProperty); }
-            set { SetValue(CurrentFolderProperty, value); }
+            get => (string) GetValue(CurrentFolderProperty);
+            set => SetValue(CurrentFolderProperty, value);
         }
         private readonly object _dummyNode;
 
@@ -44,11 +44,11 @@ namespace SvgToXaml.Explorer
 
         public ObservableCollection<Tuple<object, ICommand>> ContextMenuCommands
         {
-            get { return (ObservableCollection<Tuple<object, ICommand>>) GetValue(ContextMenuCommandsProperty); }
-            set { SetValue(ContextMenuCommandsProperty, value); }
+            get => (ObservableCollection<Tuple<object, ICommand>>) GetValue(ContextMenuCommandsProperty);
+            set => SetValue(ContextMenuCommandsProperty, value);
         }
 
-        private void FoldersTreeOnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> routedPropertyChangedEventArgs)
+        private void FoldersTreeOnSelectedItemChanged(object o, RoutedPropertyChangedEventArgs<object> routedPropertyChangedEventArgs)
         {
             if (routedPropertyChangedEventArgs.NewValue is TreeViewItem)
                 CurrentFolder = (string) (routedPropertyChangedEventArgs.NewValue as TreeViewItem).Tag;
@@ -64,7 +64,7 @@ namespace SvgToXaml.Explorer
                     Tag = drive
                 };
                 item.Items.Add(_dummyNode);
-                item.Expanded += folder_Expanded;
+                item.Expanded += FolderExpanded;
 
                 // Apply the attached property so that 
                 // the triggers know that this is root item.
@@ -74,9 +74,9 @@ namespace SvgToXaml.Explorer
             }
         }
 
-        private void folder_Expanded(object sender, RoutedEventArgs e)
+        private void FolderExpanded(object o, RoutedEventArgs e)
         {
-            TreeViewItem item = (TreeViewItem) sender;
+            TreeViewItem item = (TreeViewItem) o;
             if (item.Items.Count == 1 && item.Items[0] == _dummyNode)
             {
                 item.Items.Clear( );
@@ -91,7 +91,7 @@ namespace SvgToXaml.Explorer
                             Tag = dir
                         };
                         subitem.Items.Add(_dummyNode);
-                        subitem.Expanded += folder_Expanded;
+                        subitem.Expanded += FolderExpanded;
                         item.Items.Add(subitem);
                     }
                 }
@@ -143,16 +143,9 @@ namespace SvgToXaml.Explorer
 
         public event RoutedPropertyChangedEventHandler<object> SelectedItemChanged
         {
-            add
-            {
-                FoldersTree.SelectedItemChanged += value;
-            }
-            remove
-            {
-                FoldersTree.SelectedItemChanged -= value;
-            }
+            add => FoldersTree.SelectedItemChanged += value;
+            remove => FoldersTree.SelectedItemChanged -= value;
         }
-
 
     }
 }

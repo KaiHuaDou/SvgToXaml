@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Xml.Linq;
 using BKLib.CommandLineParser;
 
@@ -35,11 +34,11 @@ namespace SvgConverter
             )
         {
             Console.WriteLine("Building resource dictionary...");
-            var outFileName = Path.Combine(outputdir ?? inputdir, outputname);
+            string outFileName = Path.Combine(outputdir ?? inputdir, outputname);
             if (!Path.HasExtension(outFileName))
                 outFileName = Path.ChangeExtension(outFileName, ".xaml");
 
-            var resKeyInfo = new ResKeyInfo
+            ResKeyInfo resKeyInfo = new ResKeyInfo
             {
                 Name = null,
                 XamlName = Path.GetFileNameWithoutExtension(outputname),
@@ -54,9 +53,9 @@ namespace SvgConverter
 
             if (buildhtmlfile)
             {
-                var htmlFilePath = Path.Combine(inputdir,
+                string htmlFilePath = Path.Combine(inputdir,
                     Path.GetFileNameWithoutExtension(outputname));
-                var files = ConverterLogic.SvgFilesFromFolder(inputdir);
+                IEnumerable<string> files = ConverterLogic.SvgFilesFromFolder(inputdir);
                 BuildHtmlBrowseFile(files, htmlFilePath);
             }
             return 0; //no Error
@@ -80,23 +79,24 @@ namespace SvgConverter
             //        <img src="cloud-17-icon.svg" height="128" width="128">
             //    </body>
             //</html>            
-            var doc = new XDocument(
-            new XElement("html",
-                new XElement("head",
-                    new XElement("title", "Browse svg images")),
-                new XElement("body", $"Images in file: {outputFilename}",
+            XDocument doc = new XDocument(new XElement("html", new XElement(
+                "head",
+                new XElement("title", "Browse svg images")),
+                new XElement(
+                    "body",
+                    $"Images in file: {outputFilename}",
                     new XElement("br"),
-                    files.Select(
-                    f => new XElement("img",
+                    files.Select(f => new XElement(
+                        "img",
                         new XAttribute("src", Path.GetFileName(f) ?? ""),
                         new XAttribute("title", Path.GetFileNameWithoutExtension(f) ?? ""),
-                        new XAttribute("height", size),
-                        new XAttribute("width", size)
+                        new XAttribute("height", size), new XAttribute("width", size)
+                            )
                         )
                     )
                 )
-            ));
-            var filename = Path.ChangeExtension(outputFilename, ".html");
+            );
+            string filename = Path.ChangeExtension(outputFilename, ".html");
             doc.Save(filename);
             Console.WriteLine("Html overview written to {0}", filename);
         }

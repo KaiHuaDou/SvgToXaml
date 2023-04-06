@@ -15,7 +15,7 @@ using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace SvgToXaml.ViewModels
 {
-    public class SvgImagesViewModel : ViewModelBase
+    public class SvgImagesViewModel : ViewModelBase, IDisposable
     {
         private string _currentDir;
         private ObservableCollectionSafe<ImageBaseViewModel> _images;
@@ -184,7 +184,7 @@ namespace SvgToXaml.ViewModels
         public ICommand ExportDirCommand { get; set; }
         public ICommand InfoCommand { get; set; }
 
-        public ObservableCollection<Tuple<object, ICommand>> ContextMenuCommands { get; set; }
+        public ObservableCollection<Tuple<object, ICommand>> ContextMenuCommands { get; }
 
         private void ReadImagesFromDir(string folder)
         {
@@ -212,6 +212,11 @@ namespace SvgToXaml.ViewModels
             {
                 return Array.Empty<string>( );
             }
+        }
+
+        public void Dispose( )
+        {
+            throw new NotImplementedException( );
         }
     }
 }

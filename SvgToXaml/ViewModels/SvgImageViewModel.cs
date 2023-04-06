@@ -9,7 +9,6 @@ namespace SvgToXaml.ViewModels
     {
         private ConvertedSvgData _convertedSvgData;
 
-
         public SvgImageViewModel(string filepath) : base(filepath)
         {
         }
@@ -54,7 +53,6 @@ namespace SvgToXaml.ViewModels
         public string Svg => SvgData?.Svg;
 
         public string Xaml => SvgData?.Xaml;
-
 
         public ConvertedSvgData SvgData
         {

@@ -167,7 +167,6 @@ namespace SvgToXaml.Infrastructure
             });
         }
 
-
         public void RemoveAt(int index)
         {
             WriteAccess(true, (ref object dummy) =>
@@ -326,41 +325,13 @@ namespace SvgToXaml.Infrastructure
 
         public T this[int index]
         {
-            get
-            {
-                return ReadAccess(( ) => _coll[index]);
-                //_lock.EnterReadLock();
-                //try
-                //{
-                //    return _coll[index];
-                //}
-                //finally
-                //{
-                //    _lock.ExitReadLock();
-                //}
-            }
-            set
-            {
-                WriteAccess(false, (ref object dummy) =>
-                {
-                    T originalItem = this[index];
-                    _coll[index] = value;
-                    return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, originalItem, value, index);
-                });
-                //_lock.EnterWriteLock();
-                //try
-                //{
-                //    T originalItem = this[index];
-                //    _coll[index] = value;
-
-                //    OnPropertyChanged(IndexerName);
-                //    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, originalItem, value, index));
-                //}
-                //finally
-                //{
-                //    _lock.ExitWriteLock();
-                //}
-            }
+            get => ReadAccess(( ) => _coll[index]);//_lock.EnterReadLock();//try//{//    return _coll[index];//}//finally//{//    _lock.ExitReadLock();//}
+            set => WriteAccess(false, (ref object dummy) =>
+                                {
+                                    T originalItem = this[index];
+                                    _coll[index] = value;
+                                    return new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, originalItem, value, index);
+                                });//_lock.EnterWriteLock();//try//{//    T originalItem = this[index];//    _coll[index] = value;//    OnPropertyChanged(IndexerName);//    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, originalItem, value, index));//}//finally//{//    _lock.ExitWriteLock();//}
         }
 
         #region Read Access
@@ -425,22 +396,7 @@ namespace SvgToXaml.Infrastructure
             //}
         }
 
-        public int Count
-        {
-            get
-            {
-                return ReadAccess(( ) => _coll.Count);
-                //_lock.EnterReadLock();
-                //try
-                //{
-                //    return _;
-                //}
-                //finally
-                //{
-                //    _lock.ExitReadLock();
-                //}
-            }
-        }
+        public int Count => ReadAccess(( ) => _coll.Count);//_lock.EnterReadLock();//try//{//    return _;//}//finally//{//    _lock.ExitReadLock();//}
 
         private TResult ReadAccess<TResult>(Func<TResult> action)
         {
@@ -575,7 +531,6 @@ namespace SvgToXaml.Infrastructure
         //}
         //#endregion
 
-
         public class CustomDisposable : IDisposable
         {
             private readonly Action _action;
@@ -629,14 +584,8 @@ namespace SvgToXaml.Infrastructure
 
         T IList<T>.this[int index]
         {
-            get
-            {
-                return this[index];
-            }
-            set
-            {
-                this[index] = value;
-            }
+            get => this[index];
+            set => this[index] = value;
         }
 
         void ICollection<T>.Add(T item)
@@ -709,14 +658,8 @@ namespace SvgToXaml.Infrastructure
 
         object IList.this[int index]
         {
-            get
-            {
-                return this[index];
-            }
-            set
-            {
-                this[index] = (T) value;
-            }
+            get => this[index];
+            set => this[index] = (T) value;
         }
 
         void ICollection.CopyTo(Array array, int index)
@@ -728,10 +671,7 @@ namespace SvgToXaml.Infrastructure
 
         bool ICollection.IsSynchronized => ((IList) _coll).IsFixedSize;
 
-        object ICollection.SyncRoot
-        {
-            get { throw new NotSupportedException("This ObservableCollection doesn't need external synchronization"); }
-        }
+        object ICollection.SyncRoot => throw new NotSupportedException("This ObservableCollection doesn't need external synchronization");
 
         T IReadOnlyList<T>.this[int index] => this[index];
 

@@ -28,14 +28,19 @@ namespace SvgConverter
             if (string.IsNullOrEmpty(toPath)) throw new ArgumentNullException(nameof(toPath));
 
             //Slash am Ende anfügen, damit Uri damit klarkommt und weiß, was ein Folder ist, und was nicht
-            if (!fromPath.EndsWith(Path.DirectorySeparatorChar.ToString()) &&
-                !fromPath.EndsWith(Path.AltDirectorySeparatorChar.ToString()) &&
+            if (!fromPath.EndsWith(Path.DirectorySeparatorChar.ToString( )) &&
+                !fromPath.EndsWith(Path.AltDirectorySeparatorChar.ToString( )) &&
                 fromIs == PathIs.Folder)
+            {
                 fromPath += Path.DirectorySeparatorChar;
-            if (!toPath.EndsWith(Path.DirectorySeparatorChar.ToString()) &&
-                !toPath.EndsWith(Path.AltDirectorySeparatorChar.ToString()) &&
+            }
+
+            if (!toPath.EndsWith(Path.DirectorySeparatorChar.ToString( )) &&
+                !toPath.EndsWith(Path.AltDirectorySeparatorChar.ToString( )) &&
                 toIs == PathIs.Folder)
+            {
                 toPath += Path.DirectorySeparatorChar;
+            }
 
             Uri fromUri = new Uri(fromPath);
             Uri toUri = new Uri(toPath);
@@ -43,9 +48,9 @@ namespace SvgConverter
             if (fromUri.Scheme != toUri.Scheme) { return toPath; } // path can't be made relative.
 
             Uri relativeUri = fromUri.MakeRelativeUri(toUri);
-            string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+            string relativePath = Uri.UnescapeDataString(relativeUri.ToString( ));
 
-            if (toUri.Scheme.ToUpperInvariant() == "FILE")
+            if (toUri.Scheme.ToUpperInvariant( ) == "FILE")
             {
                 relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             }

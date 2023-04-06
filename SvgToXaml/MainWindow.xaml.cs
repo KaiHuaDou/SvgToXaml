@@ -21,7 +21,6 @@ namespace SvgToXaml
             ((SvgImagesViewModel) DataContext).CurrentDir = Settings.Default.LastDir;
         }
 
-
         protected override void OnClosing(CancelEventArgs e)
         {
             //Save current Dir for next Start
@@ -54,6 +53,5 @@ namespace SvgToXaml
             }
         }
     }
-
 
 }

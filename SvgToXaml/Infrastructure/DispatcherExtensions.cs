@@ -13,12 +13,11 @@ namespace SvgToXaml.Infrastructure
         /// <param name="action">Auszuführende Aktion</param>
         public static void InUi(Action action)
         {
-            if (Application.Current == null)
+            if (Application.Current is null)
             {
                 action( );
                 return;
             }
-
             Application.Current.Dispatcher.Do(action);
         }
 

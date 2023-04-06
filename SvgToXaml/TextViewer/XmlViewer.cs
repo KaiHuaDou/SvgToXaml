@@ -17,8 +17,8 @@ namespace SvgToXaml.TextViewer
 
         public new string Text
         {
-            get { return Document.Text; }
-            set { SetValue(TextProperty, value); }
+            get => Document.Text;
+            set => SetValue(TextProperty, value);
         }
 
         public XmlViewer( )

@@ -57,7 +57,7 @@ namespace SvgToXaml.Infrastructure
 
         [StructLayout(LayoutKind.Explicit)]
         // ReSharper disable once InconsistentNaming
-        public struct CHAR_UNION
+        public struct CHARUNION
         {
             // Fields
             [FieldOffset(0)]
@@ -66,7 +66,8 @@ namespace SvgToXaml.Infrastructure
             public short UnicodeChar;
         }
 
-        public enum InputEventType : short
+        [Flags]
+        public enum InputEventType
         {
             KeyEvent = 0x0001,
             MouseEvent = 0x0002,
@@ -100,14 +101,14 @@ namespace SvgToXaml.Infrastructure
             public short wRepeatCount;
             public short wVirtualKeyCode;
             public short wVirtualScanCode;
-            public CHAR_UNION uChar;
+            public CHARUNION uChar;
             public ControlKeyState dwControlKeyState;
         }
 
         [DllImport("kernel32", SetLastError = true)]
-        public static extern bool WriteConsoleInput(IntPtr hConsoleInput, KeyEventStruct[] lpBuffer, int nLength, ref int lpNumberOfEventsWritten);
+        private static extern bool WriteConsoleInput(IntPtr hConsoleInput, KeyEventStruct[] lpBuffer, int nLength, ref int lpNumberOfEventsWritten);
 
-        public enum StandardHandle
+        private enum StandardHandle
         {
             Input = -10,
             Output = -11,
@@ -115,7 +116,7 @@ namespace SvgToXaml.Infrastructure
         }
 
         [DllImport("kernel32", SetLastError = true)]
-        public static extern IntPtr GetStdHandle(StandardHandle nStdHandle);
+        private static extern IntPtr GetStdHandle(StandardHandle nStdHandle);
 
         // ReSharper disable once InconsistentNaming
         private const uint ATTACH_PARENT_PROCESS = 0xFFFFFFFF;

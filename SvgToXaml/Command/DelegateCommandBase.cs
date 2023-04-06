@@ -25,7 +25,7 @@ namespace SvgToXaml.Command
         /// </value>
         public bool IsActive
         {
-            get { return _isActive; }
+            get => _isActive;
             set
             {
                 if (_isActive == value)
@@ -64,8 +64,8 @@ namespace SvgToXaml.Command
         /// </example>
         public virtual event EventHandler CanExecuteChanged
         {
-            add { WeakEventHandlerManager.AddWeakReferenceHandler(ref _canExecuteChangedHandlers, value, 2); }
-            remove { WeakEventHandlerManager.RemoveWeakReferenceHandler(_canExecuteChangedHandlers, value); }
+            add => WeakEventHandlerManager.AddWeakReferenceHandler(ref _canExecuteChangedHandlers, value, 2);
+            remove => WeakEventHandlerManager.RemoveWeakReferenceHandler(_canExecuteChangedHandlers, value);
         }
 
         /// <summary>

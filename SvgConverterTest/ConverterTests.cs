@@ -156,7 +156,7 @@ namespace SvgConverterTest
         [Test, STAThread]
         public void Handwheel2( ) //integrated conversion, manual writing
         {
-            DrawingGroup drawing = SvgConverter.ConverterLogic.SvgFileToWpfObject("TestFiles\\Handwheel.svg", null);
+            DrawingGroup drawing = ConverterLogic.SvgFileToWpfObject("TestFiles\\Handwheel.svg", null);
             XmlXamlWriter writer = new XmlXamlWriter(null);
             string xaml = writer.Save(drawing);
             CheckXamlOutput(xaml);

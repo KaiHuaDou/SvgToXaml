@@ -1,10 +1,7 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows;
+﻿using System.Windows;
 
 namespace IconResources.Images
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class Icons
     {
         private static readonly ComponentResourceKey cloud_3_iconGeometryKeyCompResKey = MakeKey("Icons.cloud_3_iconGeometryKey");
