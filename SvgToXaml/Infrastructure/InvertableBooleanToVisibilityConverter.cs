@@ -37,24 +37,26 @@ namespace SvgToXaml.Infrastructure
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            return ((value is Visibility) && (((Visibility) value) == Visibility.Visible)) ^ InvertParam(parameter);
+            return ((value is Visibility visibility) && (visibility == Visibility.Visible)) ^ InvertParam(parameter);
         }
 
         private bool InvertParam(object param)
         {
             if (param is bool?)
                 return ((bool?) param).GetValueOrDefault( );
-            if (param == null)
-                return false;
-
-            if (param is InvertEnum)
-                return (InvertEnum) param == InvertEnum.Invert;
-            if (param is string)
+            switch (param)
             {
-                if (Enum.TryParse((string) param, true, out InvertEnum invert))
-                    return invert == InvertEnum.Invert;
-                if (bool.TryParse((string) param, out bool aBool))
-                    return aBool;
+                case null: return false;
+                case InvertEnum enumParam:
+                    return enumParam == InvertEnum.Invert;
+                case string strParam:
+                {
+                    if (Enum.TryParse(strParam, true, out InvertEnum invert))
+                        return invert == InvertEnum.Invert;
+                    if (bool.TryParse(strParam, out bool aBool))
+                        return aBool;
+                    break;
+                }
             }
             throw new InvalidDataException($"{GetType( ).Name}: not able to convert the ConverterParameter to InvertEnum or Boolean [{param}]");
         }

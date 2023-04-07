@@ -462,7 +462,7 @@ namespace SvgToXaml.WrapPanel
             return Math.Min(Math.Max(value, min), max);
         }
 
-        internal class ExtentInfo
+        internal struct ExtentInfo
         {
             public int ItemsPerLine;
             public int TotalLines;

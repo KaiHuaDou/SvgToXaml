@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace SvgToXaml.Command
 {
     /// <summary>
-    /// An <see cref="T:System.Windows.Input.ICommand"/> whose delegates can be attached for <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommandBase.Execute(System.Object)"/> and <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommandBase.CanExecute(System.Object)"/>.
+    /// An <see cref="ICommand"/> whose delegates can be attached for <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.Execute(object)"/> and <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.CanExecute(object)"/>.
     /// </summary>
     public abstract class DelegateCommandBase : ICommand, IActiveAware
     {
@@ -42,7 +42,7 @@ namespace SvgToXaml.Command
         /// </summary>
         /// 
         /// <remarks>
-        /// When subscribing to the <see cref="E:System.Windows.Input.ICommand.CanExecuteChanged"/> event using
+        /// When subscribing to the <see cref="ICommand.CanExecuteChanged"/> event using
         ///             code (not when binding using XAML) will need to keep a hard reference to the event handler. This is to prevent
         ///             garbage collection of the event handler because the command implements the Weak Event pattern so it does not have
         ///             a hard reference to this handler. An example implementation can be seen in the CompositeCommand and CommandBehaviorBase
@@ -69,16 +69,16 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Fired if the <see cref="P:Microsoft.Practices.Prism.Commands.DelegateCommandBase.IsActive"/> property changes.
+        /// Fired if the <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.IsActive"/> property changes.
         /// 
         /// </summary>
         public virtual event EventHandler IsActiveChanged;
 
         /// <summary>
-        /// Creates a new instance of a <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommandBase"/>, specifying both the execute action and the can execute function.
+        /// Creates a new instance of a <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase"/>, specifying both the execute action and the can execute function.
         /// 
         /// </summary>
-        /// <param name="executeMethod">The <see cref="T:System.Action"/> to execute when <see cref="M:System.Windows.Input.ICommand.Execute(System.Object)"/> is invoked.</param><param name="canExecuteMethod">The <see cref="T:System.Func`2"/> to invoked when <see cref="M:System.Windows.Input.ICommand.CanExecute(System.Object)"/> is invoked.</param>
+        /// <param name="executeMethod">The <see cref="Action"/> to execute when <see cref="ICommand.Execute(object)"/> is invoked.</param><param name="canExecuteMethod">The <see cref="System.Func"/> to invoked when <see cref="ICommand.CanExecute(object)"/> is invoked.</param>
         protected DelegateCommandBase(Action<object> executeMethod, Func<object, bool> canExecuteMethod)
         {
             if (executeMethod == null || canExecuteMethod == null)
@@ -92,10 +92,10 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Creates a new instance of a <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommandBase"/>, specifying both the Execute action as an awaitable Task and the CanExecute function.
+        /// Creates a new instance of a <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase"/>, specifying both the Execute action as an awaitable Task and the CanExecute function.
         /// 
         /// </summary>
-        /// <param name="executeMethod">The <see cref="T:System.Func`2"/> to execute when <see cref="M:System.Windows.Input.ICommand.Execute(System.Object)"/> is invoked.</param><param name="canExecuteMethod">The <see cref="T:System.Func`2"/> to invoked when <see cref="M:System.Windows.Input.ICommand.CanExecute(System.Object)"/> is invoked.</param>
+        /// <param name="executeMethod">The <see cref="System.Func"/> to execute when <see cref="ICommand.Execute(object)"/> is invoked.</param><param name="canExecuteMethod">The <see cref="System.Func"/> to invoked when <see cref="ICommand.CanExecute(object)"/> is invoked.</param>
         protected DelegateCommandBase(Func<object, Task> executeMethod, Func<object, bool> canExecuteMethod)
         {
             if (executeMethod == null || canExecuteMethod == null)
@@ -105,8 +105,8 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Raises <see cref="E:System.Windows.Input.ICommand.CanExecuteChanged"/> on the UI thread so every
-        ///             command invoker can requery <see cref="M:System.Windows.Input.ICommand.CanExecute(System.Object)"/>.
+        /// Raises <see cref="ICommand.CanExecuteChanged"/> on the UI thread so every
+        ///             command invoker can requery <see cref="ICommand.CanExecute(object)"/>.
         /// 
         /// </summary>
         protected virtual void OnCanExecuteChanged( )
@@ -115,11 +115,11 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Raises <see cref="E:Microsoft.Practices.Prism.Commands.DelegateCommandBase.CanExecuteChanged"/> on the UI thread so every command invoker
+        /// Raises <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.CanExecuteChanged"/> on the UI thread so every command invoker
         ///             can requery to check if the command can execute.
         /// 
         /// <remarks>
-        /// Note that this will trigger the execution of <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommandBase.CanExecute(System.Object)"/> once for each invoker.
+        /// Note that this will trigger the execution of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.CanExecute(object)"/> once for each invoker.
         /// </remarks>
         /// 
         /// </summary>
@@ -139,7 +139,7 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Executes the command with the provided parameter by invoking the <see cref="T:System.Action`1"/> supplied during construction.
+        /// Executes the command with the provided parameter by invoking the <see cref="Action"/> supplied during construction.
         /// 
         /// </summary>
         /// <param name="parameter"/>
@@ -149,7 +149,7 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Determines if the command can execute with the provided parameter by invoking the <see cref="T:System.Func`2"/> supplied during construction.
+        /// Determines if the command can execute with the provided parameter by invoking the <see cref="System.Func"/> supplied during construction.
         /// 
         /// </summary>
         /// <param name="parameter">The parameter to use when determining if this command can execute.</param>
@@ -162,7 +162,7 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// This raises the <see cref="E:Microsoft.Practices.Prism.Commands.DelegateCommandBase.IsActiveChanged"/> event.
+        /// This raises the <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.IsActiveChanged"/> event.
         /// 
         /// </summary>
         protected virtual void OnIsActiveChanged( )

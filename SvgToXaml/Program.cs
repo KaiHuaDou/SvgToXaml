@@ -14,17 +14,16 @@ namespace SvgToXaml
         private static int Main(string[] args)
         {
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
-
             int exitCode = 0;
-            if (args.Length > 0)
+            if (args.Length == 0)
             {
-                RunConsole(args);
-            }
-            else
-            {   //normale WPF-Applikationslogik
                 App app = new App( );
                 app.InitializeComponent( );
                 app.Run( );
+            }
+            else
+            {
+                RunConsole(args);
             }
             return exitCode;
         }
@@ -32,9 +31,7 @@ namespace SvgToXaml
         private static void RunConsole(string[] args)
         {
             HConsoleHelper.InitConsoleHandles( );
-
             CmdLineHandler.HandleCommandLine(args);
-
             HConsoleHelper.ReleaseConsoleHandles( );
         }
 
@@ -57,7 +54,6 @@ namespace SvgToXaml
             {
                 if (stream == null)
                     return null;
-
                 byte[] assemblyRawBytes = new byte[stream.Length];
                 stream.Read(assemblyRawBytes, 0, assemblyRawBytes.Length);
                 Assembly loadedAsm = Assembly.Load(assemblyRawBytes);

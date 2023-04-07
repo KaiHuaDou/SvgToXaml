@@ -8,15 +8,15 @@ namespace SvgToXaml.ViewModels
 {
     public abstract class ImageBaseViewModel : ViewModelBase
     {
-        protected ImageBaseViewModel(string filepath)
+        protected ImageBaseViewModel(string filePath)
         {
-            Filepath = filepath;
+            FilePath = filePath;
             OpenDetailCommand = new DelegateCommand(OpenDetailExecute);
             OpenFileCommand = new DelegateCommand(OpenFileExecute);
         }
 
-        public string Filepath { get; }
-        public string Filename => Path.GetFileName(Filepath);
+        public string FilePath { get; }
+        public string FileName => Path.GetFileName(FilePath);
         public ImageSource PreviewSource => GetImageSource( );
         public ICommand OpenDetailCommand { get; set; }
         public ICommand OpenFileCommand { get; set; }
@@ -37,7 +37,7 @@ namespace SvgToXaml.ViewModels
 
         private void OpenFileExecute( )
         {
-            Process.Start(Filepath);
+            Process.Start(FilePath);
         }
 
         protected abstract string GetSvgDesignInfo( );

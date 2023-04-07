@@ -11,10 +11,10 @@
 <#@ import namespace="System.Xml.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #><#   
-	string xamlFile = Path.ChangeExtension(this.Host.TemplateFile, ".xaml");
-	string nameSpace;
-	string prefix;
-	var keyNames = KeysFromXaml(xamlFile, out nameSpace, out prefix);
+    string xamlFile = Path.ChangeExtension(this.Host.TemplateFile, ".xaml");
+    string nameSpace;
+    string prefix;
+    var keyNames = KeysFromXaml(xamlFile, out nameSpace, out prefix);
 
 #>using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -33,9 +33,9 @@ namespace <#= nameSpace #>
     }
 }
 <#+  
-	void BuildComponentKeys(IEnumerable<string> keyNames, string prefix)
+    void BuildComponentKeys(IEnumerable<string> keyNames, string prefix)
     {
-		foreach (var name in keyNames)
+        foreach (var name in keyNames)
         {
 #>        private static readonly ComponentResourceKey <#= name #>CompResKey = MakeKey("<#= prefix #>.<#= name #>");
         public static ResourceKey <#= name #> => <#= name #>CompResKey;
@@ -49,12 +49,12 @@ namespace <#= nameSpace #>
         XNamespace xamlNs = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         nameSpace = doc.Root.LastAttribute.Value; 
-		nameSpace = nameSpace.Remove(0, "clr-namespace:".Length);
+        nameSpace = nameSpace.Remove(0, "clr-namespace:".Length);
 
         var keys = doc.Root.Elements().Attributes(xamlNs + "Key").Select(a => a.Value).ToArray();
         //keys have this form: { x: Static NameSpaceName:XamlName.Color1}
 
-		//get Prefix
+        //get Prefix
         prefix = "unknownPrefix";
         var first = keys.FirstOrDefault();
         if (first != null)
@@ -65,7 +65,7 @@ namespace <#= nameSpace #>
                 prefix = first.Substring(p1 + 1, p2 - p1 - 1).Split('.').FirstOrDefault();
         }
 
-		//keynames
+        //keynames
         return keys.Select(key =>
         {
             var p1 = key.LastIndexOf(".");

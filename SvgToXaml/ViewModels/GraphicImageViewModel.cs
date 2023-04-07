@@ -4,14 +4,12 @@ using System.Windows.Media.Imaging;
 
 namespace SvgToXaml.ViewModels
 {
-    internal class GraphicImageViewModel : ImageBaseViewModel
+    internal sealed class GraphicImageViewModel : ImageBaseViewModel
     {
-        public GraphicImageViewModel(string filepath) : base(filepath)
-        {
-        }
+        public GraphicImageViewModel(string filePath) : base(filePath) { }
         protected override ImageSource GetImageSource( )
         {
-            return new BitmapImage(new Uri(Filepath, UriKind.RelativeOrAbsolute));
+            return new BitmapImage(new Uri(FilePath, UriKind.RelativeOrAbsolute));
         }
 
         public static string SupportedFormats => "*.jpg|*.jpeg|*.png|*.bmp|*.tiff|*.gif";

@@ -30,6 +30,7 @@ namespace SvgToXaml.Explorer
             get => (string) GetValue(CurrentFolderProperty);
             set => SetValue(CurrentFolderProperty, value);
         }
+
         private readonly object _dummyNode;
 
         public FolderTree( )

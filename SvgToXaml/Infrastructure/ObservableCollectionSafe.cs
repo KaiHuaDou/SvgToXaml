@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Threading;
 
@@ -66,6 +67,7 @@ namespace SvgToXaml.Infrastructure
         public void Dispose( )
         {
             _lock.Dispose( );
+            GC.SuppressFinalize(this);
         }
 
         #region Events
@@ -310,7 +312,7 @@ namespace SvgToXaml.Infrastructure
         public IDisposable BatchUpdate( )
         {
             if (_inBatchUpdate)
-                throw new Exception("BatchUpdate already in progress");
+                throw new InvalidOperationException("BatchUpdate already in progress");
             _inBatchUpdate = true;
             return new CustomDisposable(( ) =>
             {
@@ -413,14 +415,14 @@ namespace SvgToXaml.Infrastructure
 
         #endregion
 
-        public void HandleSynchonizationCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
+        public void HandleSynchronizationCallback(IEnumerable collection, object context, Action accessMethod, bool writeAccess)
         {
             if (!Equals(collection))
-                throw new Exception("Collection does not match");
+                throw new DataException("Collection does not match");
             if (_isInCollectionChanged)
             {
                 if (writeAccess && !_lock.IsWriteLockHeld)
-                    throw new Exception("When calling CollectionChanged you should use Write Lock");
+                    throw new SynchronizationLockException("When calling CollectionChanged you should use Write Lock");
                 accessMethod( );
             }
             else

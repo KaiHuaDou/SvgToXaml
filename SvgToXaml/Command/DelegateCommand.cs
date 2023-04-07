@@ -5,28 +5,28 @@ using System.Threading.Tasks;
 namespace SvgToXaml.Command
 {
     /// <summary>
-    /// An <see cref="T:System.Windows.Input.ICommand"/> whose delegates do not take any parameters for <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommand.Execute"/> and <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommand.CanExecute"/>.
+    /// An <see cref="System.Windows.Input.ICommand"/> whose delegates do not take any parameters for <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand.Execute"/> and <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand.CanExecute"/>.
     /// 
     /// </summary>
-    /// <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommandBase"/><see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/>
+    /// <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase"/><see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>
     public class DelegateCommand : DelegateCommandBase
     {
         /// <summary>
-        /// Creates a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand"/> with the <see cref="T:System.Action"/> to invoke on execution.
+        /// Creates a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/> with the <see cref="Action"/> to invoke on execution.
         /// 
         /// </summary>
-        /// <param name="executeMethod">The <see cref="T:System.Action"/> to invoke when <see cref="M:System.Windows.Input.ICommand.Execute(System.Object)"/> is called.</param>
+        /// <param name="executeMethod">The <see cref="Action"/> to invoke when <see cref="System.Windows.Input.ICommand.Execute(object)"/> is called.</param>
         public DelegateCommand(Action executeMethod)
             : this(executeMethod, ( ) => true)
         {
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand"/> with the <see cref="T:System.Action"/> to invoke on execution
+        /// Creates a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/> with the <see cref="Action"/> to invoke on execution
         ///             and a <see langword="Func"/> to query for determining if the command can execute.
         /// 
         /// </summary>
-        /// <param name="executeMethod">The <see cref="T:System.Action"/> to invoke when <see cref="M:System.Windows.Input.ICommand.Execute(System.Object)"/> is called.</param><param name="canExecuteMethod">The <see cref="T:System.Func`1"/> to invoke when <see cref="M:System.Windows.Input.ICommand.CanExecute(System.Object)"/> is called</param>
+        /// <param name="executeMethod">The <see cref="Action"/> to invoke when <see cref="System.Windows.Input.ICommand.Execute(object)"/> is called.</param><param name="canExecuteMethod">The <see cref="System.Func"/> to invoke when <see cref="System.Windows.Input.ICommand.CanExecute(object)"/> is called</param>
         public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod)
             : base(o => executeMethod( ), o => canExecuteMethod( ))
         {
@@ -47,12 +47,12 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Factory method to create a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand"/> from an awaitable handler method.
+        /// Factory method to create a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/> from an awaitable handler method.
         /// 
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command.</param>
         /// <returns>
-        /// Constructed instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand"/>
+        /// Constructed instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>
         /// </returns>
         public static DelegateCommand FromAsyncHandler(Func<Task> executeMethod)
         {
@@ -60,12 +60,12 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Factory method to create a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand"/> from an awaitable handler method.
+        /// Factory method to create a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/> from an awaitable handler method.
         /// 
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param><param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <returns>
-        /// Constructed instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand"/>
+        /// Constructed instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>
         /// </returns>
         public static DelegateCommand FromAsyncHandler(Func<Task> executeMethod, Func<bool> canExecuteMethod)
         {
@@ -96,7 +96,7 @@ namespace SvgToXaml.Command
     }
 
     /// <summary>
-    /// An <see cref="T:System.Windows.Input.ICommand"/> whose delegates can be attached for <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommand`1.Execute(`0)"/> and <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommand`1.CanExecute(`0)"/>.
+    /// An <see cref="System.Windows.Input.ICommand"/> whose delegates can be attached for <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand.Execute(`0)"/> and <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand.CanExecute(`0)"/>.
     /// 
     /// </summary>
     /// <typeparam name="T">Parameter type.</typeparam>
@@ -130,12 +130,12 @@ namespace SvgToXaml.Command
     public class DelegateCommand<T> : DelegateCommandBase
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/>.
+        /// Initializes a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>.
         /// 
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks>
-        /// <see cref="M:Microsoft.Practices.Prism.Commands.DelegateCommand`1.CanExecute(`0)"/> will always return true.
+        /// <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand.CanExecute(`0)"/> will always return true.
         /// </remarks>
         public DelegateCommand(Action<T> executeMethod)
             : this(executeMethod, o => true)
@@ -143,10 +143,10 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/>.
+        /// Initializes a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>.
         /// 
         /// </summary>
-        /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param><param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param><exception cref="T:System.ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> ar <see langword="null"/>.</exception>
+        /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param><param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param><exception cref="ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> ar <see langword="null"/>.</exception>
         public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
             : base(o => executeMethod((T) o), o => canExecuteMethod((T) o))
         {
@@ -170,12 +170,12 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Factory method to create a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/> from an awaitable handler method.
+        /// Factory method to create a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/> from an awaitable handler method.
         /// 
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command.</param>
         /// <returns>
-        /// Constructed instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/>
+        /// Constructed instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>
         /// </returns>
         public static DelegateCommand<T> FromAsyncHandler(Func<T, Task> executeMethod)
         {
@@ -183,12 +183,12 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Factory method to create a new instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/> from an awaitable handler method.
+        /// Factory method to create a new instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/> from an awaitable handler method.
         /// 
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param><param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <returns>
-        /// Constructed instance of <see cref="T:Microsoft.Practices.Prism.Commands.DelegateCommand`1"/>
+        /// Constructed instance of <see cref="Microsoft.Practices.Prism.Commands.DelegateCommand"/>
         /// </returns>
         public static DelegateCommand<T> FromAsyncHandler(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod)
         {
@@ -196,7 +196,7 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Determines if the command can execute by invoked the <see cref="T:System.Func`2"/> provided during construction.
+        /// Determines if the command can execute by invoked the <see cref="System.Func`2"/> provided during construction.
         /// 
         /// </summary>
         /// <param name="parameter">Data used by the command to determine if it can execute.</param>
@@ -210,7 +210,7 @@ namespace SvgToXaml.Command
         }
 
         /// <summary>
-        /// Executes the command and invokes the <see cref="T:System.Action`1"/> provided during construction.
+        /// Executes the command and invokes the <see cref="Action"/> provided during construction.
         /// 
         /// </summary>
         /// <param name="parameter">Data used by the command.</param>

@@ -98,12 +98,12 @@ namespace SvgToXaml.ViewModels
             if (MessageBox.Show(outFileName + "\nhas been written\nCreate a BatchFile to automate next time?",
                 null, MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
             {
-                string outputname = Path.GetFileNameWithoutExtension(outFileName);
-                string outputdir = Path.GetDirectoryName(outFileName);
-                string relOutputDir = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, outputdir, PathIs.Folder);
+                string outputName = Path.GetFileNameWithoutExtension(outFileName);
+                string outputDir = Path.GetDirectoryName(outFileName);
+                string relOutputDir = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, outputDir, PathIs.Folder);
                 string svgToXamlPath = System.Reflection.Assembly.GetEntryAssembly( ).Location;
                 string relSvgToXamlPath = FileUtils.MakeRelativePath(CurrentDir, PathIs.Folder, svgToXamlPath, PathIs.File);
-                string batchText = $"{relSvgToXamlPath} BuildDict /inputdir \".\" /outputdir \"{relOutputDir}\" /outputname {outputname}";
+                string batchText = $"{relSvgToXamlPath} BuildDict /inputdir \".\" /outputdir \"{relOutputDir}\" /outputname {outputName}";
 
                 if (compResKeyInfo.UseComponentResKeys)
                 {
@@ -139,7 +139,7 @@ namespace SvgToXaml.ViewModels
 
         private void InfoExecute( )
         {
-            MessageBox.Show("SvgToXaml © 2015 Bernd Klaiber\n\nPowered by\nsharpvectors.codeplex.com (Svg-Support),\nicsharpcode (AvalonEdit)", "Info");
+            MessageBox.Show("SvgToXaml\n\nPowered by\nsharpvectors.codeplex.com (SVG Support),\nICSharpCode (AvalonEdit)", "Info");
         }
         private void OpenExplorerExecute(string path)
         {
@@ -195,7 +195,7 @@ namespace SvgToXaml.ViewModels
             string[] graphicFiles = GetFilesMulti(folder, GraphicImageViewModel.SupportedFormats);
             System.Collections.Generic.IEnumerable<GraphicImageViewModel> graphicImages = graphicFiles.Select(f => new GraphicImageViewModel(f));
 
-            IOrderedEnumerable<ImageBaseViewModel> allImages = svgImages.Concat<ImageBaseViewModel>(graphicImages).OrderBy(e => e.Filepath);
+            IOrderedEnumerable<ImageBaseViewModel> allImages = svgImages.Concat<ImageBaseViewModel>(graphicImages).OrderBy(e => e.FilePath);
 
             Images.AddRange(allImages);
         }
@@ -216,7 +216,8 @@ namespace SvgToXaml.ViewModels
 
         public void Dispose( )
         {
-            throw new NotImplementedException( );
+            _images.Dispose( );
+            GC.SuppressFinalize(this);
         }
     }
 }

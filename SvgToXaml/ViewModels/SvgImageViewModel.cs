@@ -62,7 +62,7 @@ namespace SvgToXaml.ViewModels
                 {
                     try
                     {
-                        _convertedSvgData = ConverterLogic.ConvertSvg(Filepath, ResultMode.DrawingImage);
+                        _convertedSvgData = ConverterLogic.ConvertSvg(FilePath, ResultMode.DrawingImage);
                     }
                     catch (Exception)
                     {

@@ -31,7 +31,7 @@
         </None>
         <Resource Include="Explorer\Images\diskdrive.png" />
         <Resource Include="Explorer\Images\folder.png" />
-        <Resource Include="icon.ico" />
+        <Resource Include="Icon.ico" />
         <EmbeddedResource Include="Payload\T4Template.tt" />
     </ItemGroup>
     <ItemGroup>
