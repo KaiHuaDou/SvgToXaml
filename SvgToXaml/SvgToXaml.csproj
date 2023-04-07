@@ -6,25 +6,24 @@
         <UseWindowsForms>true</UseWindowsForms>
         <UseWPF>true</UseWPF>
         <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DebugType>full</DebugType>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DebugType>none</DebugType>
-    </PropertyGroup>
-    <PropertyGroup>
         <StartupObject>SvgToXaml.Program</StartupObject>
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <AnalysisLevel>latest-recommended</AnalysisLevel>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
     </PropertyGroup>
     <ItemGroup>
         <AppDesigner Include="Properties\" />
         <None Update="Properties\Settings.settings">
-          <Generator>SettingsSingleFileGenerator</Generator>
-          <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
         </None>
         <None Update="TestBatch.cmd">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -42,10 +41,10 @@
         <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Properties\Settings.Designer.cs">
-        <DesignTimeSharedInput>True</DesignTimeSharedInput>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Settings.settings</DependentUpon>
-      </Compile>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>

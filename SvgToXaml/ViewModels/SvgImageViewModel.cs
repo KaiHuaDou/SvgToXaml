@@ -3,82 +3,81 @@ using System.Windows;
 using System.Windows.Media;
 using SvgConverter;
 
-namespace SvgToXaml.ViewModels
+namespace SvgToXaml.ViewModels;
+
+public class SvgImageViewModel : ImageBaseViewModel
 {
-    public class SvgImageViewModel : ImageBaseViewModel
+    private ConvertedSvgData _convertedSvgData;
+
+    public SvgImageViewModel(string filepath) : base(filepath)
     {
-        private ConvertedSvgData _convertedSvgData;
+    }
 
-        public SvgImageViewModel(string filepath) : base(filepath)
+    public SvgImageViewModel(ConvertedSvgData convertedSvgData)
+        : this(convertedSvgData.Filepath)
+    {
+        _convertedSvgData = convertedSvgData;
+    }
+
+    public static SvgImageViewModel DesignInstance
+    {
+        get
         {
+            DrawingImage imageSource = new(new GeometryDrawing(Brushes.Black, null, new RectangleGeometry(new Rect(new Size(10, 10)), 1, 1)));
+            ConvertedSvgData data = new( ) { ConvertedObj = imageSource, Filepath = "FilePath", Svg = "<svg/>", Xaml = "<xaml/>" };
+            return new SvgImageViewModel(data);
         }
+    }
 
-        public SvgImageViewModel(ConvertedSvgData convertedSvgData)
-            : this(convertedSvgData.Filepath)
-        {
-            _convertedSvgData = convertedSvgData;
-        }
+    protected override ImageSource GetImageSource( )
+    {
+        return SvgData?.ConvertedObj as ImageSource;
+    }
 
-        public static SvgImageViewModel DesignInstance
+    protected override string GetSvgDesignInfo( )
+    {
+        if (PreviewSource is DrawingImage di)
         {
-            get
+            if (di.Drawing is DrawingGroup dg)
             {
-                DrawingImage imageSource = new DrawingImage(new GeometryDrawing(Brushes.Black, null, new RectangleGeometry(new Rect(new Size(10, 10)), 1, 1)));
-                ConvertedSvgData data = new ConvertedSvgData { ConvertedObj = imageSource, Filepath = "FilePath", Svg = "<svg/>", Xaml = "<xaml/>" };
-                return new SvgImageViewModel(data);
+                Rect bounds = dg.ClipGeometry?.Bounds ?? dg.Bounds;
+                return $"{bounds.Width:#.##}x{bounds.Height:#.##}";
             }
         }
+        return null;
+    }
 
-        protected override ImageSource GetImageSource( )
-        {
-            return SvgData?.ConvertedObj as ImageSource;
-        }
+    public override bool HasXaml => true;
+    public override bool HasSvg => true;
 
-        protected override string GetSvgDesignInfo( )
+    public string Svg => SvgData?.Svg;
+
+    public string Xaml => SvgData?.Xaml;
+
+    public ConvertedSvgData SvgData
+    {
+        get
         {
-            if (PreviewSource is DrawingImage di)
+            if (_convertedSvgData == null)
             {
-                if (di.Drawing is DrawingGroup dg)
+                try
                 {
-                    Rect bounds = dg.ClipGeometry?.Bounds ?? dg.Bounds;
-                    return $"{bounds.Width:#.##}x{bounds.Height:#.##}";
+                    _convertedSvgData = ConverterLogic.ConvertSvg(FilePath, ResultMode.DrawingImage);
                 }
-            }
-            return null;
-        }
-
-        public override bool HasXaml => true;
-        public override bool HasSvg => true;
-
-        public string Svg => SvgData?.Svg;
-
-        public string Xaml => SvgData?.Xaml;
-
-        public ConvertedSvgData SvgData
-        {
-            get
-            {
-                if (_convertedSvgData == null)
+                catch (Exception)
                 {
-                    try
-                    {
-                        _convertedSvgData = ConverterLogic.ConvertSvg(FilePath, ResultMode.DrawingImage);
-                    }
-                    catch (Exception)
-                    {
-                        return null;
-                    }
-
-                    //verzögertes Laden: ist scheiß lahm
-                    //InUi(DispatcherPriority.Loaded, () =>
-                    //{
-                    //    _convertedSvgData = ConverterLogic.ConvertSvg(_filepath, ResultMode.DrawingImage);
-                    //    OnPropertyChanged("");
-                    //});
-                    //return null;
+                    return null;
                 }
-                return _convertedSvgData;
+
+                //verzögertes Laden: ist scheiß lahm
+                //InUi(DispatcherPriority.Loaded, () =>
+                //{
+                //    _convertedSvgData = ConverterLogic.ConvertSvg(_filepath, ResultMode.DrawingImage);
+                //    OnPropertyChanged("");
+                //});
+                //return null;
             }
+            return _convertedSvgData;
         }
     }
 }
