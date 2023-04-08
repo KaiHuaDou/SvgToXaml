@@ -9,9 +9,6 @@ namespace SvgToXaml;
 //todo: github oder codeplex anlegen
 //todo: Fehlerbehandlung beim Laden
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow
 {
     public MainWindow( )

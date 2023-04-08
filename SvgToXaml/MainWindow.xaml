@@ -1,4 +1,4 @@
-﻿<Window Width="525" Height="350"
+﻿<Window Width="700" Height="500"
         x:Class="SvgToXaml.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,14 +22,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DockPanel Margin="10,10,5,5">
+        <DockPanel Margin="10,10,0,5">
             <Button DockPanel.Dock="Right"
                     Command="{Binding OpenFolderCommand}"
                     TabIndex="2"
@@ -43,7 +43,7 @@
                      TabIndex="1"
                      BorderThickness="1,1,0,1" />
         </DockPanel>
-        <DockPanel Grid.Column="2" Margin="5,10,10,5">
+        <DockPanel Grid.Column="2" Margin="0,10,10,5">
             <Button Width="20" DockPanel.Dock="Right"
                     Command="{Binding OpenFileCommand}"
                     ToolTip="Open File"
@@ -53,7 +53,7 @@
                 ...
             </Button>
             <TextBox IsReadOnly="True"
-                     Text="{Binding SelectedItem.Filepath, Mode=OneWay}"
+                     Text="{Binding SelectedItem.FilePath, Mode=OneWay}"
                      BorderThickness="1,1,0,1" />
         </DockPanel>
         <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,5,10,10"
@@ -79,16 +79,17 @@
                 i
             </Button>
         </StackPanel>
-        <GridSplitter Grid.Row="1" Grid.Column="1"
+        <GridSplitter Grid.Column="1" Margin="0,10,0,0"
+                      Grid.RowSpan="3"
                       HorizontalAlignment="Stretch"
                       ResizeDirection="Columns"
                       ResizeBehavior="PreviousAndNext" />
-        <explorer:FolderTree x:Name="FolderTree" Grid.Row="1" Grid.Column="0"
+        <explorer:FolderTree x:Name="FolderTree" Grid.Row="1" Grid.Column="0" Margin="10,5,0,10"
                              Grid.RowSpan="2"
                              CurrentFolder="{Binding CurrentDir, Mode=TwoWay}"
                              TabIndex="3"
-                             ContextMenuCommands="{Binding ContextMenuCommands}" Margin="10,5,5,10" />
-        <ListBox Grid.Row="1" Grid.Column="2" Margin="5,5,10,5"
+                             ContextMenuCommands="{Binding ContextMenuCommands}" />
+        <ListBox Grid.Row="1" Grid.Column="2" Margin="0,5,10,5"
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                  SelectionMode="Single"
                  ItemsSource="{Binding Images}"
@@ -108,15 +109,7 @@
                     <Border x:Name="GraphicBorder"
                             BorderThickness="1"
                             BorderBrush="MediumBlue">
-                        <!--  don't set, use automatic: Width="{Binding Path='ActualWidth', ElementName='Bd'}" Height="{Binding Path='ActualHeight', ElementName='Bd'}"  -->
-                        <Grid ToolTip="{Binding Filename}">
-                            <!--<Button Style="{StaticResource FlatButton}">
-                                <Image Source="{Binding PreviewSource}"></Image>
-                                <Button.InputBindings>
-                                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenDetailCommand}" />
-                                </Button.InputBindings>
-                            </Button>-->
-
+                        <Grid ToolTip="{Binding FileName}">
                             <Image HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Source="{Binding PreviewSource}">

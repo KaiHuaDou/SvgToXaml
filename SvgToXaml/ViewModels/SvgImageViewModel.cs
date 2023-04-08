@@ -54,7 +54,7 @@ public class SvgImageViewModel : ImageBaseViewModel
 
     public string Xaml => SvgData?.Xaml;
 
-    public ConvertedSvgData SvgData
+    private ConvertedSvgData SvgData
     {
         get
         {

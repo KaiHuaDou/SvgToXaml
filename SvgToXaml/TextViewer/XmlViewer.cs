@@ -1,18 +1,24 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows;
 using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace SvgToXaml.TextViewer;
 
+/// <summary>
+/// The whole folding does not work properly -> keep the code
+/// </summary>
 public class XmlViewer : TextEditor
 {
     public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
         "Text", typeof(string), typeof(XmlViewer), new PropertyMetadata(default(string), TextChanged));
 
-    private static new void TextChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static new void TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        XmlViewer xmlViewer = (XmlViewer) dependencyObject;
-        xmlViewer.Document.Text = (string) args.NewValue;
+        XmlViewer viewer = (XmlViewer) d;
+        viewer.Document.Text = (string) e.NewValue;
     }
 
     public new string Text
@@ -24,33 +30,27 @@ public class XmlViewer : TextEditor
     public XmlViewer( )
     {
         SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
-        //Options.AllowScrollBelowDocument = true;
         Options.EnableHyperlinks = true;
         Options.EnableEmailHyperlinks = true;
-        //Options.ShowSpaces = true;
-        //Options.ShowTabs = true;
-        //Options.ShowEndOfLine = true;              
-
+        Options.AllowScrollBelowDocument = true;
         ShowLineNumbers = true;
-
-        //_foldingManager = FoldingManager.Install(TextArea);
-        //_foldingStrategy = new XmlFoldingStrategy();
-        //Document.TextChanged += DocumentTextChanged;
+        foldingManager = FoldingManager.Install(TextArea);
+        foldingStrategy = new XmlFoldingStrategy( );
+        Document.TextChanged += Document_TextChanged;
     }
 
-    //der ganze Folding Quatsch funktioniert nicht richtig -> bleiben lassen
-    //private XmlFoldingStrategy _foldingStrategy;
-    //private FoldingManager _foldingManager;
-    //private volatile bool _updateFoldingRequested;
-    //private async void DocumentTextChanged(object sender, EventArgs eventArgs)
-    //{
-    //    if (!_updateFoldingRequested)
-    //    {
-    //        _updateFoldingRequested = true;
-    //        await Task.Delay(1000);
-    //    }
-    //    _updateFoldingRequested = false;
-    //    _foldingStrategy.UpdateFoldings(_foldingManager, Document);
-    //}
+    private async void Document_TextChanged(object sender, EventArgs e)
+    {
+        if (!onWaitingUpdate)
+        {
+            onWaitingUpdate = true;
+            await Task.Delay(1000);
+        }
+        onWaitingUpdate = false;
+        foldingStrategy.UpdateFoldings(foldingManager, Document);
+    }
 
+    private XmlFoldingStrategy foldingStrategy;
+    private FoldingManager foldingManager;
+    private volatile bool onWaitingUpdate;
 }

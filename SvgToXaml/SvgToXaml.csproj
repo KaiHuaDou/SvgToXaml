@@ -2,16 +2,15 @@
     <PropertyGroup>
         <TargetFramework>net462</TargetFramework>
         <OutputType>WinExe</OutputType>
-        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-        <UseWindowsForms>true</UseWindowsForms>
         <UseWPF>true</UseWPF>
-        <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <LangVersion>10.0</LangVersion>
+        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
         <StartupObject>SvgToXaml.Program</StartupObject>
         <ApplicationIcon>icon.ico</ApplicationIcon>
-        <PlatformTarget>AnyCPU</PlatformTarget>
         <AnalysisLevel>latest-recommended</AnalysisLevel>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <LangVersion>10.0</LangVersion>
+        <UserSecretsId>18ed5f2e-6ee7-4ff3-86b3-248347dffa35</UserSecretsId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DebugType>full</DebugType>
@@ -21,10 +20,6 @@
     </PropertyGroup>
     <ItemGroup>
         <AppDesigner Include="Properties\" />
-        <None Update="Properties\Settings.settings">
-            <Generator>SettingsSingleFileGenerator</Generator>
-            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-        </None>
         <None Update="TestBatch.cmd">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -34,17 +29,29 @@
         <EmbeddedResource Include="Payload\T4Template.tt" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-        <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
-        <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-    </ItemGroup>
-    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
         <Compile Update="Properties\Settings.Designer.cs">
             <DesignTimeSharedInput>True</DesignTimeSharedInput>
             <AutoGen>True</AutoGen>
             <DependentUpon>Settings.settings</DependentUpon>
         </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
+        <PackageReference Include="Costura.Fody" Version="5.7.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Fody" Version="6.6.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+        <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     </ItemGroup>
 </Project>
