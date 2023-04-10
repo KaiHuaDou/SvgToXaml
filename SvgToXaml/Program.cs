@@ -36,7 +36,7 @@ internal static class Program
     }
 
     private static readonly Dictionary<string, Assembly> LoadedAsmsCache = new(StringComparer.InvariantCultureIgnoreCase);
-    private static Assembly OnResolveAssembly(object sender, ResolveEventArgs args)
+    private static Assembly OnResolveAssembly(object o, ResolveEventArgs args)
     {
         if (LoadedAsmsCache.TryGetValue(args.Name, out Assembly cachedAsm))
             return cachedAsm;

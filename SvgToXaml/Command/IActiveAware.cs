@@ -20,7 +20,7 @@ public interface IActiveAware
     bool IsActive { get; set; }
 
     /// <summary>
-    /// Notifies that the value for <see cref="P:Microsoft.Practices.Prism.IActiveAware.IsActive"/> property has changed.
+    /// Notifies that the value for <see cref="Microsoft.Practices.Prism.IActiveAware.IsActive"/> property has changed.
     /// 
     /// </summary>
     event EventHandler IsActiveChanged;

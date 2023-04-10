@@ -39,7 +39,7 @@ public class XmlViewer : TextEditor
         Document.TextChanged += Document_TextChanged;
     }
 
-    private async void Document_TextChanged(object sender, EventArgs e)
+    private async void Document_TextChanged(object o, EventArgs e)
     {
         if (!onWaitingUpdate)
         {

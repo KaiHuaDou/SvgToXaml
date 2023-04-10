@@ -27,7 +27,7 @@ public partial class MainWindow
         base.OnClosing(e);
     }
 
-    private void MainWindow_OnDrop(object sender, DragEventArgs e)
+    private void MainWindow_OnDrop(object o, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace SvgToXaml.ViewModels;
 
 /// <summary>
-/// Implementation of <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> to simplify models.
+/// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
 /// 
 /// </summary>
 public abstract class BindableBase : INotifyPropertyChanged
@@ -45,7 +45,7 @@ public abstract class BindableBase : INotifyPropertyChanged
     /// </summary>
     /// <param name="propertyName">Name of the property used to notify listeners. This
     ///             value is optional and can be provided automatically when invoked from compilers
-    ///             that support <see cref="T:System.Runtime.CompilerServices.CallerMemberNameAttribute"/>.</param>
+    ///             that support <see cref="CallerMemberNameAttribute"/>.</param>
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChangedEventHandler changedEventHandler = PropertyChanged;
@@ -70,9 +70,9 @@ public abstract class BindableBase : INotifyPropertyChanged
     /// <returns>
     /// The name of the property.
     /// </returns>
-    /// <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="propertyExpression"/> is null.</exception><exception cref="T:System.ArgumentException">Thrown when the expression is:<br/>
-    ///                 Not a <see cref="T:System.Linq.Expressions.MemberExpression"/><br/>
-    ///                 The <see cref="T:System.Linq.Expressions.MemberExpression"/> does not represent a property.<br/>
+    /// <exception cref="ArgumentNullException">Thrown if the <paramref name="propertyExpression"/> is null.</exception><exception cref="ArgumentException">Thrown when the expression is:<br/>
+    ///                 Not a <see cref="MemberExpression"/><br/>
+    ///                 The <see cref="MemberExpression"/> does not represent a property.<br/>
     ///                 Or, the property is static.
     ///             </exception>
     public static string ExtractPropertyName<T>(Expression<Func<T>> propertyExpression)

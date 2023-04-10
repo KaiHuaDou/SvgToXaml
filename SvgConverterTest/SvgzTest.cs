@@ -2,17 +2,16 @@
 using System.IO.Compression;
 using NUnit.Framework;
 
-namespace SvgConverterTest
+namespace SvgConverterTest;
+
+public class SvgzTest
 {
-    public class SvgzTest
+    [Test]
+    public void TestUnzip( )
     {
-        [Test]
-        public void TestUnzip( )
-        {
-            FileStream fs = File.OpenRead(@".\TestFiles\example.svgz");
-            GZipStream stream = new GZipStream(fs, CompressionMode.Decompress);
-            FileStream destination = File.OpenWrite(@".\TestFiles\example.svg");
-            stream.CopyTo(destination);
-        }
+        FileStream fs = File.OpenRead(@".\TestFiles\example.svgz");
+        GZipStream stream = new(fs, CompressionMode.Decompress);
+        FileStream destination = File.OpenWrite(@".\TestFiles\example.svg");
+        stream.CopyTo(destination);
     }
 }

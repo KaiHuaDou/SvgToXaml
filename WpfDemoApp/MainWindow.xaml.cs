@@ -14,18 +14,18 @@ namespace WpfDemoApp
             InitializeComponent( );
         }
 
-        private void ChangeColor_OnClick(object sender, RoutedEventArgs e)
+        private void ChangeColor_OnClick(object o, RoutedEventArgs e)
         {
             Props.SetContentBrush(ButtonImage1, Brushes.Yellow);
             Button2.Foreground = Brushes.Yellow;
         }
 
-        private void ChangeMiddleColor_OnClick(object sender, RoutedEventArgs e)
+        private void ChangeMiddleColor_OnClick(object o, RoutedEventArgs e)
         {
             BrushCollection[2] = Brushes.Green;
         }
 
-        private void BtnChangeMiddleColors_OnClick(object sender, RoutedEventArgs e)
+        private void BtnChangeMiddleColors_OnClick(object o, RoutedEventArgs e)
         {
             //Many icons have same Color (application wide)
             if (FindResource("BrushCollectionRes") is BrushCollection brushes)

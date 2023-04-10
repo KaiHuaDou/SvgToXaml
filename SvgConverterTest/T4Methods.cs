@@ -4,45 +4,44 @@ using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
 
-namespace SvgConverterTest
+namespace SvgConverterTest;
+
+public class T4Methods
 {
-    public class T4Methods
+    [Test]
+    public void Test_KeysFromXaml( )
     {
-        [Test]
-        public void Test_KeysFromXaml( )
+        IEnumerable<string> keys = KeysFromXaml(@"TestFiles\Expected\SvgDirToXamlTest_withUseCompResKey.xaml", out string nameSpaceName, out string prefix);
+        Console.WriteLine($"NS:{nameSpaceName}, Prefix:{prefix}");
+        foreach (string key in keys)
         {
-            IEnumerable<string> keys = KeysFromXaml(@"TestFiles\Expected\SvgDirToXamlTest_withUseCompResKey.xaml", out string nameSpaceName, out string prefix);
-            Console.WriteLine($"NS:{nameSpaceName}, Prefix:{prefix}");
-            foreach (string key in keys)
-            {
-                Console.WriteLine(key);
-            }
+            Console.WriteLine(key);
+        }
+    }
+
+    public static IEnumerable<string> KeysFromXaml(string fileName, out string nameSpace, out string prefix)
+    {
+        XDocument doc = XDocument.Load(fileName);
+        XNamespace xamlNs = "http://schemas.microsoft.com/winfx/2006/xaml";
+        nameSpace = doc.Root.LastAttribute.Value; //hoffentlich ist es immer das letzte, aber nach Namen suchen is nich, und andere ausschließen ist auch nicht besser
+        string[] keys = doc.Root.Elements( ).Attributes(xamlNs + "Key").Select(a => a.Value).ToArray( );
+        prefix = "unknownPrefix";
+        string first = keys.FirstOrDefault( );
+        if (first != null)
+        {
+            int p1 = first.LastIndexOf(":");
+            int p2 = first.LastIndexOf("}");
+            if (p1 < p2)
+                prefix = first.Substring(p1 + 1, p2 - p1 - 1).Split('.').FirstOrDefault( );
         }
 
-        public static IEnumerable<string> KeysFromXaml(string fileName, out string nameSpace, out string prefix)
+        string[] names = keys.Select(key =>
         {
-            XDocument doc = XDocument.Load(fileName);
-            XNamespace xamlNs = "http://schemas.microsoft.com/winfx/2006/xaml";
-            nameSpace = doc.Root.LastAttribute.Value; //hoffentlich ist es immer das letzte, aber nach Namen suchen is nich, und andere ausschließen ist auch nicht besser
-            string[] keys = doc.Root.Elements( ).Attributes(xamlNs + "Key").Select(a => a.Value).ToArray( );
-            prefix = "unknownPrefix";
-            string first = keys.FirstOrDefault( );
-            if (first != null)
-            {
-                int p1 = first.LastIndexOf(":");
-                int p2 = first.LastIndexOf("}");
-                if (p1 < p2)
-                    prefix = first.Substring(p1 + 1, p2 - p1 - 1).Split('.').FirstOrDefault( );
-            }
+            int p1 = key.LastIndexOf(".");
+            int p2 = key.LastIndexOf("}");
+            return p1 < p2 ? key.Substring(p1 + 1, p2 - p1 - 1) : key;
+        }).ToArray( );
 
-            string[] names = keys.Select(key =>
-            {
-                int p1 = key.LastIndexOf(".");
-                int p2 = key.LastIndexOf("}");
-                return p1 < p2 ? key.Substring(p1 + 1, p2 - p1 - 1) : key;
-            }).ToArray( );
-
-            return names;
-        }
+        return names;
     }
 }

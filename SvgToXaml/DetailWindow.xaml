@@ -3,7 +3,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:textViewer="clr-namespace:SvgToXaml.TextViewer"
-        Title="{Binding FileName}">
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:avalondoc="clr-namespace:ICSharpCode.AvalonEdit.Document;assembly=ICSharpCode.AvalonEdit"
+        Title="{Binding FileName}"
+        Loaded="WindowLoaded">
     <TabControl Margin="0,0,0,10" TabStripPlacement="Bottom">
         <TabItem Header="View Image">
             <DockPanel>
@@ -43,15 +46,25 @@
             </DockPanel>
         </TabItem>
         <TabItem Header="SVG" Visibility="{Binding HasSvg, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <textViewer:XmlViewer FontFamily="Consolas" Text="{Binding Svg}" />
+            <avalonedit:TextEditor x:Name="SvgViewer"
+                                   FontFamily="Consolas"
+                                   ShowLineNumbers="True">
+                <avalonedit:TextEditor.Options>
+                    <avalonedit:TextEditorOptions AllowScrollBelowDocument="True" />
+                </avalonedit:TextEditor.Options>
+            </avalonedit:TextEditor>
         </TabItem>
         <TabItem Header="XAML" Visibility="{Binding HasXaml, Converter={StaticResource BooleanToVisibilityConverter}}">
             <DockPanel>
                 <Button Margin="0,5,10,5" DockPanel.Dock="Bottom" Click="CopyToClipboardClick" Content="Copy to Clipboard"
                         HorizontalAlignment="Right" />
-                <textViewer:XmlViewer x:Name="XamlViewer"
-                                      FontFamily="Consolas"
-                                      Text="{Binding Xaml}" />
+                <avalonedit:TextEditor x:Name="XamlViewer"
+                                       FontFamily="Consolas"
+                                       ShowLineNumbers="True">
+                    <avalonedit:TextEditor.Options>
+                        <avalonedit:TextEditorOptions AllowScrollBelowDocument="True" />
+                    </avalonedit:TextEditor.Options>
+                </avalonedit:TextEditor>
             </DockPanel>
         </TabItem>
     </TabControl>

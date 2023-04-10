@@ -5,12 +5,11 @@
         <UseWPF>true</UseWPF>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <LangVersion>10.0</LangVersion>
-        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
         <StartupObject>SvgToXaml.Program</StartupObject>
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <AnalysisLevel>latest-recommended</AnalysisLevel>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
-        <UserSecretsId>18ed5f2e-6ee7-4ff3-86b3-248347dffa35</UserSecretsId>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DebugType>full</DebugType>

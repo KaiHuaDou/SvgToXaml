@@ -176,7 +176,7 @@ public class SvgImagesViewModel : ViewModelBase, IDisposable
     public ObservableCollectionSafe<ImageBaseViewModel> Images
     {
         get => _images;
-        set => SetProperty(ref _images, value);
+        private set { }
     }
 
     public ICommand OpenFolderCommand { get; set; }

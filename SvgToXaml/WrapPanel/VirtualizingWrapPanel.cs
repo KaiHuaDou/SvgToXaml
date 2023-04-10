@@ -68,9 +68,9 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
         InvalidateMeasure( );
     }
 
-    protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
+    protected override void OnItemsChanged(object o, ItemsChangedEventArgs args)
     {
-        base.OnItemsChanged(sender, args);
+        base.OnItemsChanged(o, args);
 
         InvalidateMeasure( );
     }
