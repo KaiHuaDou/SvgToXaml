@@ -50,7 +50,10 @@
                                    FontFamily="Consolas"
                                    ShowLineNumbers="True">
                 <avalonedit:TextEditor.Options>
-                    <avalonedit:TextEditorOptions AllowScrollBelowDocument="True" />
+                    <avalonedit:TextEditorOptions AllowScrollBelowDocument="True"
+                                                  EnableHyperlinks="True"
+                                                  EnableTextDragDrop="True"
+                                                  HighlightCurrentLine="True" />
                 </avalonedit:TextEditor.Options>
             </avalonedit:TextEditor>
         </TabItem>
@@ -62,7 +65,10 @@
                                        FontFamily="Consolas"
                                        ShowLineNumbers="True">
                     <avalonedit:TextEditor.Options>
-                        <avalonedit:TextEditorOptions AllowScrollBelowDocument="True" />
+                        <avalonedit:TextEditorOptions AllowScrollBelowDocument="True"
+                                                      EnableHyperlinks="True"
+                                                      EnableTextDragDrop="True"
+                                                      HighlightCurrentLine="True" />
                     </avalonedit:TextEditor.Options>
                 </avalonedit:TextEditor>
             </DockPanel>

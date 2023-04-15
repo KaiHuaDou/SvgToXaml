@@ -31,17 +31,17 @@ public class ConverterTests
         if (testSuffix != null)
             filename += $"_{testSuffix}";
         filename += ".xaml";
-        File.WriteAllText($"TestFiles\\Actual\\{filename}", xaml);
+        File.WriteAllText($@"TestFiles\Actual\{filename}", xaml);
         if (check)
         {
-            string expected = File.ReadAllText($"TestFiles\\Expected\\{filename}");
+            string expected = File.ReadAllText($@"TestFiles\Expected\{filename}");
             xaml.Should( ).Be(expected);
         }
     }
 
-    [TestCase("TestFiles\\cloud-3-icon.svg")]
-    [TestCase("TestFiles\\3d-view-icon.svg")]
-    [TestCase("TestFiles\\JOG.svg")]
+    [TestCase(@"TestFiles\cloud-3-icon.svg")]
+    [TestCase(@"TestFiles\3d-view-icon.svg")]
+    [TestCase(@"TestFiles\JOG.svg")]
     public void ConvertFileToDrawingGroup(string filename)
     {
         WpfDrawingSettings settings = new( )
@@ -70,9 +70,9 @@ public class ConverterTests
         CheckXamlOutput(xaml);
     }
 
-    [TestCase("TestFiles\\cloud-3-icon.svg")]
-    [TestCase("TestFiles\\3d-view-icon.svg")]
-    [TestCase("TestFiles\\JOG.svg")]
+    [TestCase(@"TestFiles\cloud-3-icon.svg")]
+    [TestCase(@"TestFiles\3d-view-icon.svg")]
+    [TestCase(@"TestFiles\JOG.svg")]
     public void ConvertFileToDrawingImage(string filename)
     {
         WpfDrawingSettings settings = new( )
@@ -86,8 +86,8 @@ public class ConverterTests
         CheckXamlOutput(xaml, Path.GetFileName(filename));
     }
 
-    [TestCase("TestFiles\\cloud-3-icon.svg")]
-    [TestCase("TestFiles\\JOG.svg")]
+    [TestCase(@"TestFiles\cloud-3-icon.svg")]
+    [TestCase(@"TestFiles\JOG.svg")]
     public void ConvertFileToDrawingGroupWithRuntime(string filename)
     {
         WpfDrawingSettings settings = new( )

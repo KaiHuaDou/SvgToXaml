@@ -7,25 +7,6 @@
         <LangVersion>10.0</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup2.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_cloud-3-icon.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_JOG.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup_3d-view-icon.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup_cloud-3-icon.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup_JOG.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingImage_3d-view-icon.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingImage_cloud-3-icon.svg.xaml" />
-      <Page Remove="TestFiles\Expected\ConvertFileToDrawingImage_JOG.svg.xaml" />
-      <Page Remove="TestFiles\Expected\Handwheel.xaml" />
-      <Page Remove="TestFiles\Expected\Handwheel1.xaml" />
-      <Page Remove="TestFiles\Expected\Handwheel2.xaml" />
-      <Page Remove="TestFiles\Expected\Handwheel3.xaml" />
-      <Page Remove="TestFiles\Expected\SvgDirToXamlTest_withNamePrefix.xaml" />
-      <Page Remove="TestFiles\Expected\SvgDirToXamlTest_withUseCompResKey.xaml" />
-      <Page Remove="TestFiles\Expected\SvgDirToXaml_with_defaultSettingsTest.xaml" />
-      <Page Remove="TestFiles\xamlUntidy.xaml" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="BKEDV.CommandLineParser">
             <Version>1.2.5</Version>
         </PackageReference>
@@ -41,87 +22,114 @@
         <PackageReference Include="SharpVectors.Reloaded">
             <Version>1.8.1</Version>
         </PackageReference>
+        <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
+        <Folder Include="Properties\" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup2.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_cloud-3-icon.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_JOG.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup_3d-view-icon.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup_cloud-3-icon.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingGroup_JOG.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingImage_3d-view-icon.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingImage_cloud-3-icon.svg.xaml" />
+        <Page Remove="TestFiles\Expected\ConvertFileToDrawingImage_JOG.svg.xaml" />
+        <Page Remove="TestFiles\Expected\Handwheel.xaml" />
+        <Page Remove="TestFiles\Expected\Handwheel1.xaml" />
+        <Page Remove="TestFiles\Expected\Handwheel2.xaml" />
+        <Page Remove="TestFiles\Expected\Handwheel3.xaml" />
+        <Page Remove="TestFiles\Expected\SvgDirToXamlTest_withNamePrefix.xaml" />
+        <Page Remove="TestFiles\Expected\SvgDirToXamlTest_withUseCompResKey.xaml" />
+        <Page Remove="TestFiles\Expected\SvgDirToXaml_with_defaultSettingsTest.xaml" />
+        <Page Remove="TestFiles\xamlUntidy.xaml" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Properties\" />
+        <None Include="TestFiles\Expected\ConvertFileToDrawingGroup2.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_cloud-3-icon.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_JOG.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingGroup_3d-view-icon.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingGroup_cloud-3-icon.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingGroup_JOG.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingImage_3d-view-icon.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingImage_cloud-3-icon.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\ConvertFileToDrawingImage_JOG.svg.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\Handwheel.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\Handwheel1.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\Handwheel2.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\Handwheel3.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\SvgDirToXamlTest_withNamePrefix.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\SvgDirToXamlTest_withUseCompResKey.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\Expected\SvgDirToXaml_with_defaultSettingsTest.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="TestFiles\xamlUntidy.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingGroup2.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_cloud-3-icon.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingGroupWithRuntime_JOG.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingGroup_3d-view-icon.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingGroup_cloud-3-icon.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingGroup_JOG.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingImage_3d-view-icon.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingImage_cloud-3-icon.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\ConvertFileToDrawingImage_JOG.svg.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\Handwheel.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\Handwheel1.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\Handwheel2.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\Handwheel3.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\SvgDirToXamlTest_withNamePrefix.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\SvgDirToXamlTest_withUseCompResKey.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Expected\SvgDirToXaml_with_defaultSettingsTest.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\xamlUntidy.xaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-    <ItemGroup>
-      <None Update="TestFiles\3d-view-icon.svg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\cloud-3-icon.svg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\example.svgz">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\Handwheel.svg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\Images.html">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\JOG.svg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\README.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="TestFiles\3d-view-icon.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\cloud-3-icon.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\example.svgz">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\Handwheel.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\Images.html">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\JOG.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\README.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\Subfolder1\3d-view-b-icon.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\Subfolder1\Handwheel.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\Subfolder1\images.html">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\Subfolder1\Subfolder2\cloud-3-a-icon.svg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>
