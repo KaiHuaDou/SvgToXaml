@@ -68,10 +68,9 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
         InvalidateMeasure( );
     }
 
-    protected override void OnItemsChanged(object o, ItemsChangedEventArgs args)
+    protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
     {
-        base.OnItemsChanged(o, args);
-
+        base.OnItemsChanged(sender, args);
         InvalidateMeasure( );
     }
 
@@ -105,7 +104,6 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
         {
             for (int itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
             {
-
                 UIElement child = (UIElement) _itemsGenerator.GenerateNext(out bool newlyRealized);
                 SetVirtualItemIndex(child, itemIndex);
 
@@ -121,12 +119,8 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
                         if (!ReferenceEquals(Children[visualIndex], child))
                         {
                             int childCurrentIndex = Children.IndexOf(child);
-
                             if (childCurrentIndex >= 0)
-                            {
                                 RemoveInternalChildRange(childCurrentIndex, 1);
-                            }
-
                             InsertInternalChild(visualIndex, child);
                         }
                     }
@@ -163,10 +157,8 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
         UpdateScrollInfo(availableSize, extentInfo);
 
         Size desiredSize = new(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width,
-                                   double.IsInfinity(availableSize.Height) ? 0 : availableSize.Height);
-
+                               double.IsInfinity(availableSize.Height) ? 0 : availableSize.Height);
         _isInMeasure = false;
-
         return desiredSize;
     }
 
@@ -180,7 +172,6 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
         foreach (UIElement child in Children)
         {
             int virtualItemIndex = GetVirtualItemIndex(child);
-
             if (virtualItemIndex < layoutInfo.FirstRealizedItemIndex || virtualItemIndex > layoutInfo.LastRealizedItemIndex)
             {
                 GeneratorPosition generatorPosition = _itemsGenerator.GeneratorPositionFromIndex(virtualItemIndex);
@@ -200,7 +191,6 @@ public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
         {
             child.Arrange(_childLayouts[child]);
         }
-
         return finalSize;
     }
 

@@ -4,7 +4,7 @@
         <UseWPF>true</UseWPF>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="BKEDV.CommandLineParser">

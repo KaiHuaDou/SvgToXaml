@@ -4,7 +4,7 @@
         <OutputType>WinExe</OutputType>
         <UseWPF>true</UseWPF>
         <PlatformTarget>AnyCPU</PlatformTarget>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
         <StartupObject>SvgToXaml.Program</StartupObject>
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <AnalysisLevel>latest-recommended</AnalysisLevel>
@@ -42,7 +42,6 @@
         <ProjectReference Include="..\SvgConverter\SvgConverter.csproj" />
         <PackageReference Include="Costura.Fody" Version="5.7.0">
             <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Fody" Version="6.6.4">
             <PrivateAssets>all</PrivateAssets>

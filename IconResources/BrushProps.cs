@@ -9,296 +9,282 @@ using System.Windows.Media;
 
 // ReSharper disable CheckNamespace
 
-namespace RelativeBrushes
+namespace RelativeBrushes;
+
+public class BrushCollection : ObservableCollection<Brush>
 {
-    public class BrushCollection : ObservableCollection<Brush>
+    public WeakReference Parent;
+    private List<WeakReference> _parents;
+    private List<WeakReference> Parents
     {
-        public WeakReference Parent;
-        private List<WeakReference> _parents;
-        private List<WeakReference> Parents
+        get
         {
-            get
+            _parents ??= new List<WeakReference>( );
+            return _parents;
+        }
+    }
+
+    public void AddParent(Visual visual)
+    {
+        if (visual == null)
+            return;
+        Parents.Add(new WeakReference(visual));
+    }
+
+    public void RemoveParent(Visual visual)
+    {
+        if (visual == null)
+            return;
+        int index = Parents.FindIndex(wr => ReferenceEquals(wr.Target, visual));
+        if (index >= 0)
+            Parents.RemoveAt(index);
+    }
+
+    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+    {
+        base.OnCollectionChanged(e);
+        foreach (WeakReference weakReference in Parents)
+        {
+            if (weakReference.IsAlive)
             {
-                if (_parents == null)
-                    _parents = new List<WeakReference>( );
-                return _parents;
-            }
-        }
-
-        public void AddParent(Visual visual)
-        {
-            if (visual == null)
-                return;
-            Parents.Add(new WeakReference(visual));
-        }
-
-        public void RemoveParent(Visual visual)
-        {
-            if (visual == null)
-                return;
-            int index = Parents.FindIndex(wr => ReferenceEquals(wr.Target, visual));
-            if (index >= 0)
-                Parents.RemoveAt(index);
-        }
-
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            base.OnCollectionChanged(e);
-            foreach (WeakReference weakReference in Parents)
-            {
-                if (weakReference.IsAlive)
+                if (weakReference.Target is Image image)
                 {
-                    if (weakReference.Target is Image image)
-                    {
-                        ImageSource imageSource = image.Source;
-                        Props.SetBrushesToClonedImageSource(image, imageSource, this);
-                    }
+                    ImageSource imageSource = image.Source;
+                    Props.SetBrushesToClonedImageSource(image, imageSource, this);
                 }
             }
         }
-
     }
 
-    //[Bindable(BindableSupport.Yes)]
-    public static class Props
+}
+
+//[Bindable(BindableSupport.Yes)]
+public static class Props
+{
+    #region ContentBrush
+    public static readonly DependencyProperty ContentBrushProperty = DependencyProperty.RegisterAttached(
+        "ContentBrush", typeof(Brush), typeof(Props), new PropertyMetadata(default(Brush), ContentBrushPropertyChangedCallback));
+
+    private static void ContentBrushPropertyChangedCallback(DependencyObject dp, DependencyPropertyChangedEventArgs args)
     {
-        #region ContentBrush
-
-        public static readonly DependencyProperty ContentBrushProperty = DependencyProperty.RegisterAttached(
-            "ContentBrush", typeof(Brush), typeof(Props), new PropertyMetadata(default(Brush), ContentBrushPropertyChangedCallback));
-
-        private static void ContentBrushPropertyChangedCallback(DependencyObject dp, DependencyPropertyChangedEventArgs args)
+        BrushCollection brushes = GetContentBrushes(dp);
+        bool brushesCreated = false;
+        if (brushes == null)
         {
-            BrushCollection brushes = GetContentBrushes(dp);
-            bool brushesCreated = false;
-            if (brushes == null)
-            {
-                brushes = new BrushCollection( );
-                brushesCreated = true;
-            }
-            if (brushes.Count == 1 && ReferenceEquals(brushes[0], args.OldValue))
-                brushes[0] = args.NewValue as Brush;
-            if (brushes.Count == 0)
-                brushes.Add(args.NewValue as Brush);
-            if (brushesCreated)
-                SetContentBrushes(dp, brushes);
+            brushes = new BrushCollection( );
+            brushesCreated = true;
         }
+        if (brushes.Count == 1 && ReferenceEquals(brushes[0], args.OldValue))
+            brushes[0] = args.NewValue as Brush;
+        if (brushes.Count == 0)
+            brushes.Add(args.NewValue as Brush);
+        if (brushesCreated)
+            SetContentBrushes(dp, brushes);
+    }
 
-        public static void SetContentBrush(DependencyObject element, Brush value)
-        {
-            element.SetValue(ContentBrushProperty, value);
-        }
+    public static void SetContentBrush(DependencyObject element, Brush value)
+    {
+        element.SetValue(ContentBrushProperty, value);
+    }
 
-        public static Brush GetContentBrush(DependencyObject element)
-        {
-            return (Brush) element.GetValue(ContentBrushProperty);
-        }
+    public static Brush GetContentBrush(DependencyObject element)
+    {
+        return (Brush) element.GetValue(ContentBrushProperty);
+    }
+    #endregion
 
-        #endregion
-
-        #region ContentBrushes
-
-        public static readonly DependencyProperty ContentBrushesProperty = DependencyProperty.RegisterAttached(
+    #region ContentBrushes
+    public static readonly DependencyProperty ContentBrushesProperty =
+        DependencyProperty.RegisterAttached(
             "ContentBrushes", // possibly Shadow the name so the parser does not skip GetContentBrushes
-            typeof(BrushCollection), typeof(Props), new PropertyMetadata(default(BrushCollection), ContentBrushesPropertyChangedCallback));
+            typeof(BrushCollection), typeof(Props),
+            new PropertyMetadata(default(BrushCollection),
+            ContentBrushesPropertyChangedCallback));
 
-        private static void ContentBrushesPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void ContentBrushesPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    {
+        Visual visual = dependencyObject as Visual;
+        if (visual is Image && args.OldValue is BrushCollection collection)
         {
-            Visual visual = dependencyObject as Visual;
-            if (visual is Image && args.OldValue is BrushCollection collection)
-            {
-                Image image = visual as Image;
-                BrushCollection brushes = collection;
-                brushes.RemoveParent(image);
-            }
-            if (visual is Image && args.NewValue is BrushCollection collection1)
-            {
-                Image image = visual as Image;
-                BrushCollection brushes = collection1;
-                ImageSource imageSource = image.Source;
-                SetBrushesToClonedImageSource(image, imageSource, brushes);
-                brushes.AddParent(image);
-            }
+            Image image = visual as Image;
+            BrushCollection brushes = collection;
+            brushes.RemoveParent(image);
         }
-
-        public static void SetContentBrushes(DependencyObject element, BrushCollection value)
+        if (visual is Image && args.NewValue is BrushCollection collection1)
         {
-            element.SetValue(ContentBrushesProperty, value);
+            Image image = visual as Image;
+            BrushCollection brushes = collection1;
+            ImageSource imageSource = image.Source;
+            SetBrushesToClonedImageSource(image, imageSource, brushes);
+            brushes.AddParent(image);
         }
-
-        public static BrushCollection GetContentBrushes(DependencyObject element)
-        {
-            BrushCollection collection = (BrushCollection) element.GetValue(ContentBrushesProperty);
-            if (collection == null)
-            {
-                collection = new BrushCollection( );
-                element.SetValue(ContentBrushesProperty, collection);
-            }
-            return collection;
-        }
-
-        #endregion
-
-        #region SourceEx
-
-        public static readonly DependencyProperty SourceExProperty = DependencyProperty.RegisterAttached(
-            "SourceEx", typeof(ImageSource), typeof(Props), new FrameworkPropertyMetadata(default(ImageSource), FrameworkPropertyMetadataOptions.AffectsRender, SourceExPropertyChangedCallback));
-
-        private static void SourceExPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-        {
-            //(dependencyObject as Image).Source = args.NewValue as ImageSource;
-            Visual visual = dependencyObject as Visual;
-            if (visual is Image)
-            {
-                Image image = visual as Image;
-                if (args.NewValue is ImageSource source)
-                {
-                    BrushCollection brushes = GetContentBrushes(image);
-                    ImageSource imageSource = source;
-                    ImageSource clonedImageSource = EnsureClonedSource(image, imageSource);
-                    SetBrushesToImageSource(clonedImageSource, brushes);
-                    image.Source = clonedImageSource;
-                }
-                else
-                {
-                    if (args.NewValue == null)
-                        image.Source = null;
-                }
-            }
-            //else dann passiert eben nix, selbst schuld, wenn jemand SourceEx woanders benutzt
-        }
-
-        public static void SetSourceEx(DependencyObject element, ImageSource value)
-        {
-            element.SetValue(SourceExProperty, value);
-        }
-
-        public static ImageSource GetSourceEx(DependencyObject element)
-        {
-            return (ImageSource) element.GetValue(SourceExProperty);
-        }
-
-        #endregion
-
-        #region SetBrushes
-
-        private static readonly DependencyProperty SourceClonedProperty = DependencyProperty.RegisterAttached(
-            "SourceCloned", typeof(bool), typeof(Props), new PropertyMetadata(default(bool)));
-
-        private static void SetSourceCloned(DependencyObject element, bool value)
-        {
-            element.SetValue(SourceClonedProperty, value);
-        }
-
-        private static bool GetSourceCloned(DependencyObject element)
-        {
-            return (bool) element.GetValue(SourceClonedProperty);
-        }
-
-        private static ImageSource EnsureClonedSource(Image image, ImageSource imageSource)
-        {
-            if (image == null || imageSource == null)
-                return null;
-            if (GetSourceCloned(image))
-                return imageSource; //already a clone
-
-            ImageSource cloned = imageSource.Clone( );
-            SetSourceCloned(image, true);
-            return cloned;
-        }
-
-        #endregion
-
-        #region SetBrushes
-
-        internal static void SetBrushesToClonedImageSource(Image image, ImageSource imageSource, BrushCollection brushes)
-        {
-            ImageSource clonedImageSource = EnsureClonedSource(image, imageSource);
-            SetBrushesToImageSource(clonedImageSource, brushes);
-            if (clonedImageSource != null && !ReferenceEquals(clonedImageSource, image.Source))
-                image.Source = clonedImageSource;
-        }
-
-        public static void SetBrushesToImageSource(ImageSource imageSource, BrushCollection brushCollection)
-        {
-            if (imageSource != null && brushCollection != null)
-            {
-                BrushProp[] brushProps = GetBrushesPropsFromImageSource(imageSource);
-
-                for (int i = 0; i < brushProps.Length; i++)
-                {
-                    if (i < brushCollection.Count)
-                    {
-                        BrushProp brushProp = brushProps[i];
-                        Brush brush = brushCollection[i];
-                        brushProp.Dp.SetValue(brushProp.Prop, brush);
-                    }
-                }
-            }
-        }
-
-        private static BrushProp[] GetBrushesPropsFromImageSource(ImageSource imageSource)
-        {
-            IEnumerable<BrushProp> brushProps = null;
-            if (imageSource is DrawingImage source)
-            {
-                Drawing drawing = source.Drawing;
-                brushProps = GetBrushesFromDrawing(drawing);
-            }
-
-            if (brushProps == null)
-                brushProps = Enumerable.Empty<BrushProp>( );
-
-            return brushProps
-                .Where(e => e.Dp != null)
-                .Where(e => e.Dp.GetValue(e.Prop) != null) //nur die verwenden, bei denen schon was gesetzt ist
-                .ToArray( );
-        }
-
-        private static IEnumerable<BrushProp> GetBrushesFromDrawing(Drawing drawing)
-        {
-            switch (drawing)
-            {
-                case DrawingGroup group:
-                    return GetBrushesFromDrawingGroup(group);
-                case GeometryDrawing geometry:
-                    return GetBrushesFromGeometryDrawing(geometry);
-                case GlyphRunDrawing glyph:
-                    return GetBrushesFromGlyphRunDrawing(glyph);
-                //ImageDrawing not handled here
-                //VideoDrawing not handled here
-                default:
-                    return Enumerable.Empty<BrushProp>( );
-            }
-        }
-
-        private static IEnumerable<BrushProp> GetBrushesFromDrawingGroup(DrawingGroup drawingGroup)
-        {
-            return drawingGroup.Children.SelectMany(GetBrushesFromDrawing);
-        }
-
-        private static IEnumerable<BrushProp> GetBrushesFromGeometryDrawing(GeometryDrawing geometryDrawing)
-        {
-            yield return new BrushProp(geometryDrawing.Pen, Pen.BrushProperty);
-            yield return new BrushProp(geometryDrawing, GeometryDrawing.BrushProperty);
-        }
-
-        private static IEnumerable<BrushProp> GetBrushesFromGlyphRunDrawing(GlyphRunDrawing glyphRunDrawing)
-        {
-            yield return new BrushProp(glyphRunDrawing, GlyphRunDrawing.ForegroundBrushProperty);
-        }
-
-        private class BrushProp
-        {
-            public BrushProp(DependencyObject dp, DependencyProperty prop)
-            {
-                Dp = dp;
-                Prop = prop;
-            }
-            public DependencyObject Dp { get; set; }
-            public DependencyProperty Prop { get; set; }
-        }
-
-        #endregion
     }
+
+    public static void SetContentBrushes(DependencyObject element, BrushCollection value)
+    {
+        element.SetValue(ContentBrushesProperty, value);
+    }
+
+    public static BrushCollection GetContentBrushes(DependencyObject element)
+    {
+        BrushCollection collection = (BrushCollection) element.GetValue(ContentBrushesProperty);
+        if (collection == null)
+        {
+            collection = new BrushCollection( );
+            element.SetValue(ContentBrushesProperty, collection);
+        }
+        return collection;
+    }
+    #endregion
+
+    #region SourceEx
+    public static readonly DependencyProperty SourceExProperty = DependencyProperty.RegisterAttached(
+        "SourceEx", typeof(ImageSource), typeof(Props), new FrameworkPropertyMetadata(default(ImageSource), FrameworkPropertyMetadataOptions.AffectsRender, SourceExPropertyChangedCallback));
+
+    private static void SourceExPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    {
+        //(dependencyObject as Image).Source = args.NewValue as ImageSource;
+        Visual visual = dependencyObject as Visual;
+        if (visual is Image)
+        {
+            Image image = visual as Image;
+            if (args.NewValue is ImageSource source)
+            {
+                BrushCollection brushes = GetContentBrushes(image);
+                ImageSource imageSource = source;
+                ImageSource clonedImageSource = EnsureClonedSource(image, imageSource);
+                SetBrushesToImageSource(clonedImageSource, brushes);
+                image.Source = clonedImageSource;
+            }
+            else
+            {
+                if (args.NewValue == null)
+                    image.Source = null;
+            }
+        }
+        //else dann passiert eben nix, selbst schuld, wenn jemand SourceEx woanders benutzt
+    }
+
+    public static void SetSourceEx(DependencyObject element, ImageSource value)
+    {
+        element.SetValue(SourceExProperty, value);
+    }
+
+    public static ImageSource GetSourceEx(DependencyObject element)
+    {
+        return (ImageSource) element.GetValue(SourceExProperty);
+    }
+
+    #endregion
+
+    #region SetBrushes
+
+    private static readonly DependencyProperty SourceClonedProperty = DependencyProperty.RegisterAttached(
+        "SourceCloned", typeof(bool), typeof(Props), new PropertyMetadata(default(bool)));
+
+    private static void SetSourceCloned(DependencyObject element, bool value)
+    {
+        element.SetValue(SourceClonedProperty, value);
+    }
+
+    private static bool GetSourceCloned(DependencyObject element)
+    {
+        return (bool) element.GetValue(SourceClonedProperty);
+    }
+
+    private static ImageSource EnsureClonedSource(Image image, ImageSource imageSource)
+    {
+        if (image == null || imageSource == null)
+            return null;
+        if (GetSourceCloned(image))
+            return imageSource; //already a clone
+
+        ImageSource cloned = imageSource.Clone( );
+        SetSourceCloned(image, true);
+        return cloned;
+    }
+
+    internal static void SetBrushesToClonedImageSource(Image image, ImageSource imageSource, BrushCollection brushes)
+    {
+        ImageSource clonedImageSource = EnsureClonedSource(image, imageSource);
+        SetBrushesToImageSource(clonedImageSource, brushes);
+        if (clonedImageSource != null && !ReferenceEquals(clonedImageSource, image.Source))
+            image.Source = clonedImageSource;
+    }
+
+    public static void SetBrushesToImageSource(ImageSource imageSource, BrushCollection brushCollection)
+    {
+        if (imageSource != null && brushCollection != null)
+        {
+            BrushProp[] brushProps = GetBrushesPropsFromImageSource(imageSource);
+
+            for (int i = 0; i < brushProps.Length; i++)
+            {
+                if (i < brushCollection.Count)
+                {
+                    BrushProp brushProp = brushProps[i];
+                    Brush brush = brushCollection[i];
+                    brushProp.Dp.SetValue(brushProp.Prop, brush);
+                }
+            }
+        }
+    }
+
+    private static BrushProp[] GetBrushesPropsFromImageSource(ImageSource imageSource)
+    {
+        IEnumerable<BrushProp> brushProps = null;
+        if (imageSource is DrawingImage source)
+        {
+            Drawing drawing = source.Drawing;
+            brushProps = GetBrushesFromDrawing(drawing);
+        }
+
+        brushProps ??= Enumerable.Empty<BrushProp>( );
+
+        return brushProps
+            .Where(e => e.Dp != null)
+            .Where(e => e.Dp.GetValue(e.Prop) != null) //nur die verwenden, bei denen schon was gesetzt ist
+            .ToArray( );
+    }
+
+    private static IEnumerable<BrushProp> GetBrushesFromDrawing(Drawing drawing)
+    {
+        return drawing switch
+        {
+            DrawingGroup group => GetBrushesFromDrawingGroup(group),
+            GeometryDrawing geometry => GetBrushesFromGeometryDrawing(geometry),
+            GlyphRunDrawing glyph => GetBrushesFromGlyphRunDrawing(glyph),
+            //ImageDrawing not handled here
+            //VideoDrawing not handled here
+            _ => Enumerable.Empty<BrushProp>( ),
+        };
+    }
+
+    private static IEnumerable<BrushProp> GetBrushesFromDrawingGroup(DrawingGroup drawingGroup)
+    {
+        return drawingGroup.Children.SelectMany(GetBrushesFromDrawing);
+    }
+
+    private static IEnumerable<BrushProp> GetBrushesFromGeometryDrawing(GeometryDrawing geometryDrawing)
+    {
+        yield return new BrushProp(geometryDrawing.Pen, Pen.BrushProperty);
+        yield return new BrushProp(geometryDrawing, GeometryDrawing.BrushProperty);
+    }
+
+    private static IEnumerable<BrushProp> GetBrushesFromGlyphRunDrawing(GlyphRunDrawing glyphRunDrawing)
+    {
+        yield return new BrushProp(glyphRunDrawing, GlyphRunDrawing.ForegroundBrushProperty);
+    }
+
+    private class BrushProp
+    {
+        public BrushProp(DependencyObject dp, DependencyProperty prop)
+        {
+            Dp = dp;
+            Prop = prop;
+        }
+        public DependencyObject Dp { get; set; }
+        public DependencyProperty Prop { get; set; }
+    }
+    #endregion
 }

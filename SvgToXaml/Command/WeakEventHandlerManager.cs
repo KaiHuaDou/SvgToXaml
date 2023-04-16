@@ -1,3 +1,6 @@
+#pragma warning disable CA1002
+#pragma warning disable CA1045
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -44,7 +47,10 @@ public static class WeakEventHandlerManager
                 callees[count] = eventHandler;
                 ++count;
             }
-            else handlers.RemoveAt(index);
+            else
+            {
+                handlers.RemoveAt(index);
+            }
         }
         return count;
     }

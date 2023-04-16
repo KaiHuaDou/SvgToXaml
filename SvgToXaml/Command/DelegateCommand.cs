@@ -78,7 +78,7 @@ public class DelegateCommand : DelegateCommandBase
     /// </summary>
     public virtual async Task Execute( )
     {
-        await Execute(null);
+        await Execute(null).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -216,6 +216,6 @@ public class DelegateCommand<T> : DelegateCommandBase
     /// <param name="parameter">Data used by the command.</param>
     public virtual async Task Execute(T parameter)
     {
-        await Execute((object) parameter);
+        await Execute((object) parameter).ConfigureAwait(false);
     }
 }

@@ -11,7 +11,6 @@ public class InvertableBooleanToVisibilityConverter : IValueConverter
 {
     private enum InvertEnum
     {
-        // ReSharper disable once UnusedMember.Local
         Normal, Invert
     }
 
@@ -26,16 +25,16 @@ public class InvertableBooleanToVisibilityConverter : IValueConverter
     /// optional (default false)</param>
     /// <param name="culture">not used</param>
     /// <returns></returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object value, Type targetType,
+                          object parameter, CultureInfo culture)
     {
-        bool boolValue = value == null
-            ? false ^ InvertParam(parameter)
-            : (bool) value ^ InvertParam(parameter);
-        return boolValue ? Visibility.Visible : Visibility.Collapsed;
+        bool result = value == null ?
+            false ^ InvertParam(parameter) : (bool) value ^ InvertParam(parameter);
+        return result ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType,
-        object parameter, CultureInfo culture)
+                              object parameter, CultureInfo culture)
     {
         return ((value is Visibility visibility) && (visibility == Visibility.Visible)) ^ InvertParam(parameter);
     }

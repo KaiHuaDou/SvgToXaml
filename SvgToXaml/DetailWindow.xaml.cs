@@ -31,20 +31,38 @@ public partial class DetailWindow
 
     private void WindowLoaded(object o, RoutedEventArgs e)
     {
-        SvgImageViewModel context = DataContext as SvgImageViewModel;
-        XamlViewer.Document.Text = context.Xaml;
-        XamlViewer.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
-        SvgViewer.Document.Text = context.Svg;
-        SvgViewer.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
+        if (DataContext is not SvgImageViewModel context)
+            return;
+        if (context.HasXaml)
+        {
+            XamlViewer.Document.Text = context.Xaml;
+            XamlViewer.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
+            //xamlFoldingMgr = FoldingManager.Install(XamlViewer.TextArea);
+            //xamlFoldings = new( );
+            //XamlViewer.Document.TextChanged += XamlChanged;
+            //xamlFoldings.UpdateFoldings(xamlFoldingMgr, XamlViewer.Document);
+        }
+        if (context.HasSvg)
+        {
+            SvgViewer.Document.Text = context.Svg;
+            SvgViewer.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
+            //svgFoldingMgr = FoldingManager.Install(SvgViewer.TextArea);
+            //svgFoldings = new( );
+            //SvgViewer.Document.TextChanged += SvgChanged;
+            //svgFoldings.UpdateFoldings(svgFoldingMgr, SvgViewer.Document);
+        }
+    }
+    private void CopyToClipboardClick(object o, RoutedEventArgs e)
+    {
+        Clipboard.SetText(XamlViewer.Text);
+    }
 
-        //xamlFoldingMgr = FoldingManager.Install(XamlViewer.TextArea);
-        //xamlFoldings = new( );
-        //XamlViewer.Document.TextChanged += XamlChanged;
-        //xamlFoldings.UpdateFoldings(xamlFoldingMgr, XamlViewer.Document);
-        //svgFoldingMgr = FoldingManager.Install(SvgViewer.TextArea);
-        //svgFoldings = new( );
-        //SvgViewer.Document.TextChanged += SvgChanged;
-        //svgFoldings.UpdateFoldings(svgFoldingMgr, SvgViewer.Document);
+    private void ToggleStretchClicked(object o, MouseButtonEventArgs e)
+    {
+        List<Stretch> values = Enum.GetValues(typeof(Stretch)).OfType<Stretch>( ).ToList( );
+        int idx = values.IndexOf(Image.Stretch);
+        idx = (idx + 1) % values.Count;
+        Image.Stretch = values[idx];
     }
 
     //private async void XamlChanged(object o, EventArgs e)
@@ -68,17 +86,4 @@ public partial class DetailWindow
     //    svgUpdating = false;
     //    svgFoldings.UpdateFoldings(svgFoldingMgr, SvgViewer.Document);
     //}
-
-    private void CopyToClipboardClick(object o, RoutedEventArgs e)
-    {
-        Clipboard.SetText(XamlViewer.Text);
-    }
-
-    private void ToggleStretchClicked(object o, MouseButtonEventArgs e)
-    {
-        List<Stretch> values = Enum.GetValues(typeof(Stretch)).OfType<Stretch>( ).ToList( );
-        int idx = values.IndexOf(Image.Stretch);
-        idx = (idx + 1) % values.Count;
-        Image.Stretch = values[idx];
-    }
 }

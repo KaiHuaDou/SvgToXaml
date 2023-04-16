@@ -543,6 +543,7 @@ public class ObservableCollectionSafe<T> : INotifyCollectionChanged, INotifyProp
         public void Dispose( )
         {
             _action( );
+            GC.SuppressFinalize(this);
         }
     }
 

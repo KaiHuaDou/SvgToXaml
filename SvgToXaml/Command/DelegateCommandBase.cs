@@ -130,7 +130,7 @@ public abstract class DelegateCommandBase : ICommand, IActiveAware
 
     async void ICommand.Execute(object parameter)
     {
-        await Execute(parameter);
+        await Execute(parameter).ConfigureAwait(false);
     }
 
     bool ICommand.CanExecute(object parameter)
@@ -140,17 +140,15 @@ public abstract class DelegateCommandBase : ICommand, IActiveAware
 
     /// <summary>
     /// Executes the command with the provided parameter by invoking the <see cref="Action"/> supplied during construction.
-    /// 
     /// </summary>
     /// <param name="parameter"/>
     protected async Task Execute(object parameter)
     {
-        await ExecuteMethod(parameter);
+        await ExecuteMethod(parameter).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Determines if the command can execute with the provided parameter by invoking the <see cref="System.Func"/> supplied during construction.
-    /// 
     /// </summary>
     /// <param name="parameter">The parameter to use when determining if this command can execute.</param>
     /// <returns>
@@ -163,7 +161,6 @@ public abstract class DelegateCommandBase : ICommand, IActiveAware
 
     /// <summary>
     /// This raises the <see cref="Microsoft.Practices.Prism.Commands.DelegateCommandBase.IsActiveChanged"/> event.
-    /// 
     /// </summary>
     protected virtual void OnIsActiveChanged( )
     {

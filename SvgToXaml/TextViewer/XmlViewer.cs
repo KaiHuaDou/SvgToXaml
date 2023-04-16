@@ -44,7 +44,7 @@ public class XmlViewer : TextEditor
         if (!onWaitingUpdate)
         {
             onWaitingUpdate = true;
-            await Task.Delay(1000);
+            await Task.Delay(1000).ConfigureAwait(false);
         }
         onWaitingUpdate = false;
         foldingStrategy.UpdateFoldings(foldingManager, Document);

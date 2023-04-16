@@ -21,7 +21,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -29,71 +29,77 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <DockPanel Margin="10,10,0,5">
+        <DockPanel Margin="10,10,0,0">
             <Button DockPanel.Dock="Right"
                     Command="{Binding OpenFolderCommand}"
                     TabIndex="2"
                     ToolTip="Open Folder"
-                    BorderThickness="0,1,1,1"
+                    BorderThickness="0,2,0,2"
                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
                 ...
             </Button>
             <TextBox Text="{Binding CurrentDir, Mode=TwoWay}"
                      TabIndex="1"
-                     BorderThickness="1,1,0,1" />
+                     BorderThickness="2,2,0,2" />
         </DockPanel>
-        <DockPanel Grid.Column="2" Margin="0,10,10,5">
+        <DockPanel Grid.Column="2" Margin="0,10,10,0">
             <Button Width="20" DockPanel.Dock="Right"
                     Command="{Binding OpenFileCommand}"
                     ToolTip="Open File"
-                    BorderThickness="0,1,1,1"
+                    BorderThickness="0,2,2,2"
                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
                 ...
             </Button>
             <TextBox IsReadOnly="True"
                      Text="{Binding SelectedItem.FilePath, Mode=OneWay}"
-                     BorderThickness="1,1,0,1" />
+                     BorderThickness="0,2,0,2" />
         </DockPanel>
-        <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,5,10,10"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-            <Button Margin="5,0,5,0" Padding="5,0" DockPanel.Dock="Right"
-                    Command="{Binding ExportDirCommand}"
-                    TabIndex="2"
-                    ToolTip="Export all SVGs to a Xaml">
-                <Image Width="24" Source="{StaticResource SaveDrawingImage}" />
-            </Button>
-            <Slider x:Name="Slider" Width="100" Margin="5,0,5,0" DockPanel.Dock="Right"
-                    VerticalAlignment="Center"
-                    Minimum="16"
-                    Maximum="500"
-                    LargeChange="8"
-                    SmallChange="2"
-                    Value="96" />
-            <Button Margin="5,0,0,0" Padding="10,0" DockPanel.Dock="Right"
-                    Command="{Binding InfoCommand}"
-                    TabIndex="2"
-                    ToolTip="Info">
-                i
-            </Button>
-        </StackPanel>
-        <GridSplitter Grid.Column="1" Margin="0,10,0,0"
+        <Border Grid.Row="2" Grid.Column="2"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                BorderThickness="0,2,2,2" Margin="0,0,10,10">
+            <DockPanel>
+                <Button Margin="5,0,0,0" Padding="10,0" DockPanel.Dock="Right"
+                        Command="{Binding InfoCommand}"
+                        TabIndex="2"
+                        ToolTip="Info" BorderThickness="0">
+                    i
+                </Button>
+                <Button Margin="5,0,5,0" Padding="5,0" DockPanel.Dock="Right"
+                        Command="{Binding ExportDirCommand}"
+                        TabIndex="2"
+                        ToolTip="Export all SVGs to a Xaml" BorderThickness="0">
+                    <Image Width="24" Source="{StaticResource SaveDrawingImage}" />
+                </Button>
+                <Slider x:Name="Slider" Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Minimum="16"
+                        Maximum="500"
+                        LargeChange="8"
+                        SmallChange="2"
+                        Value="96" />
+            </DockPanel>
+        </Border>
+        <GridSplitter Grid.Column="1" Margin="0,10,0,10"
                       Grid.RowSpan="3"
                       HorizontalAlignment="Stretch"
                       ResizeDirection="Columns"
-                      ResizeBehavior="PreviousAndNext" />
-        <explorer:FolderTree x:Name="FolderTree" Grid.Row="1" Grid.Column="0" Margin="10,5,0,10"
+                      ResizeBehavior="PreviousAndNext"
+                      Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <explorer:FolderTree x:Name="FolderTree" Grid.Row="1" Grid.Column="0" Margin="10,0,0,10"
                              Grid.RowSpan="2"
                              CurrentFolder="{Binding CurrentDir, Mode=TwoWay}"
                              TabIndex="3"
-                             ContextMenuCommands="{Binding ContextMenuCommands}" />
-        <ListBox Grid.Row="1" Grid.Column="2" Margin="0,5,10,5"
+                             ContextMenuCommands="{Binding ContextMenuCommands}"
+                             BorderThickness="2,0,0,2"
+                             BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <ListBox Grid.Row="1" Grid.Column="2" Margin="0,0,10,0"
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                  SelectionMode="Single"
                  ItemsSource="{Binding Images}"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 BorderThickness="0,0,2,0">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <wrapPanel:VirtualizingWrapPanel ItemWidth="{Binding ElementName=Slider, Path=Value}" ItemHeight="{Binding ElementName=Slider, Path=Value}" />

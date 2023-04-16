@@ -3,6 +3,7 @@
         <TargetFramework>net462</TargetFramework>
         <OutputType>Library</OutputType>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <LangVersion>11.0</LangVersion>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
     <ItemGroup>
