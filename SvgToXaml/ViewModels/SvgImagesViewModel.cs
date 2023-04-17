@@ -117,9 +117,7 @@ public class SvgImagesViewModel : ViewModelBase, IDisposable
                     batchText += " /nameprefix \"" + compResKeyInfo.Prefix + "\"";
                 }
             }
-
             batchText += "\r\npause";
-
             File.WriteAllText(Path.Combine(CurrentDir, "Update.cmd"), batchText);
         }
     }
